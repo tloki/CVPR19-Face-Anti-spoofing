@@ -1,7 +1,7 @@
 from imgaug import augmenters as iaa
 import math
 import cv2
-from data_helper import *
+from process.data_helper import *
 
 def random_cropping(image, target_shape=(32, 32, 3), is_random = True):
     image = cv2.resize(image,(RESIZE_SIZE,RESIZE_SIZE))

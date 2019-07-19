@@ -1,0 +1,6 @@
+	out_dir      = ./models/model_A_color_48
+
+	<additional comments>
+	  ... xxx baseline  ... 
+
+** dataset setting **

@@ -1,6 +1,6 @@
 from utils import *
 import cv2
-from data_helper import *
+from process.data_helper import *
 
 class FDDataset(Dataset):
     def __init__(self, mode, modality='color', fold_index=-1, image_size=128, augment = None, augmentor = None, balance = True):

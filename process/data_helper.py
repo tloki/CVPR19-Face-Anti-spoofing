@@ -2,12 +2,15 @@ import os
 import random
 from utils import *
 
+# dataset root path
 DATA_ROOT = r'/data1/shentao/DATA/CVPR19_FaceAntiSpoofing'
+
 
 TRN_IMGS_DIR = DATA_ROOT + '/Training/'
 TST_IMGS_DIR = DATA_ROOT + '/Val/'
 RESIZE_SIZE = 112
 
+# list of training images
 def load_train_list():
     list = []
     f = open(DATA_ROOT + '/train_list.txt')
@@ -18,6 +21,7 @@ def load_train_list():
         list.append(line)
     return list
 
+# list of validation images
 def load_val_list():
     list = []
     f = open(DATA_ROOT + '/val_private_list.txt')
@@ -28,6 +32,7 @@ def load_val_list():
         list.append(line)
     return list
 
+# list of test images
 def load_test_list():
     list = []
     f = open(DATA_ROOT + '/test_public_list.txt')
