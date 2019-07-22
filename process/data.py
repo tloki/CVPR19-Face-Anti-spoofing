@@ -3,12 +3,16 @@ import cv2
 from process.data_helper import *
 
 class FDDataset(Dataset):
-    def __init__(self, mode, modality='color', fold_index=-1, image_size=128, augment = None, augmentor = None, balance = True):
+    def __init__(self, mode, modality='color', fold_index=-1, image_size=128, augment=None, augmentor=None,
+                 balance=True, dataset_path=None):
+
         super(FDDataset, self).__init__()
         print('fold: '+str(fold_index))
         print(modality)
 
-        self.mode       = mode
+        self.dataset_path = dataset_path
+
+        self.mode = mode
         self.modality = modality
 
         self.augment = augment
@@ -29,17 +33,17 @@ class FDDataset(Dataset):
         print('fold index set: ', fold_index)
 
         if self.mode == 'test':
-            self.test_list = load_test_list()
+            self.test_list = load_test_list(path=self.dataset_path)
             self.num_data = len(self.test_list)
             print('set dataset mode: test')
 
         elif self.mode == 'val':
-            self.val_list = load_val_list()
+            self.val_list = load_val_list(path=self.dataset_path)
             self.num_data = len(self.val_list)
             print('set dataset mode: test')
 
         elif self.mode == 'train':
-            self.train_list = load_train_list()
+            self.train_list = load_train_list(path=self.dataset_path)
 
             random.shuffle(self.train_list)
             self.num_data = len(self.train_list)

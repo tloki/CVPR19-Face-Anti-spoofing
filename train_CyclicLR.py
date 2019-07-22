@@ -57,7 +57,7 @@ def run_train(config):
     log.write('** dataset setting **\n')
     augment = get_augment(config.image_mode)
     train_dataset = FDDataset(mode = 'train', modality=config.image_mode,image_size=config.image_size,
-                              fold_index=config.train_fold_index,augment=augment)
+                              fold_index=config.train_fold_index,augment=augment, dataset_path=config.dataset_path)
     train_loader  = DataLoader(train_dataset,
                                 shuffle=True,
                                 batch_size  = config.batch_size,
@@ -65,7 +65,7 @@ def run_train(config):
                                 num_workers = 4)
 
     valid_dataset = FDDataset(mode = 'val', modality=config.image_mode,image_size=config.image_size,
-                              fold_index=config.train_fold_index,augment=augment)
+                              fold_index=config.train_fold_index,augment=augment, dataset_path=config.dataset_path)
     valid_loader  = DataLoader( valid_dataset,
                                 shuffle=False,
                                 batch_size = config.batch_size // 36,
@@ -214,7 +214,7 @@ def run_test(config, dir):
 
 
     valid_dataset = FDDataset(mode = 'val', modality=config.image_mode,image_size=config.image_size,
-                              fold_index=config.train_fold_index,augment=augment)
+                              fold_index=config.train_fold_index,augment=augment, dataset_path=config.dataset_path)
     valid_loader  = DataLoader( valid_dataset,
                                 shuffle=False,
                                 batch_size  = config.batch_size,
@@ -222,7 +222,8 @@ def run_test(config, dir):
                                 num_workers=8)
 
     test_dataset = FDDataset(mode = 'test', modality=config.image_mode,image_size=config.image_size,
-                              fold_index=config.train_fold_index,augment=augment)
+                              fold_index=config.train_fold_index,augment=augment, dataset_path=config.dataset_path)
+
     test_loader  = DataLoader( test_dataset,
                                 shuffle=False,
                                 batch_size  = config.batch_size,
@@ -264,7 +265,11 @@ if __name__ == '__main__':
 
     parser.add_argument('--mode', type=str, default='train', choices=['train','infer_test'])
     parser.add_argument('--pretrained_model', type=str, default=None)
+    parser.add_argument('--dataset_path', type=str, default="/home/loki/Datasets/spoofing/NUAA/Detectedface/casia-surf-lookalike")
 
     config = parser.parse_args()
+
     print(config)
+    print(config.dataset_path)
+
     main(config)

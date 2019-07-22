@@ -3,7 +3,7 @@ import random
 from utils import *
 
 # dataset root path
-DATA_ROOT = r'/home/loki/Datasets/spoofing/NUAA/Detectedface/casia-surf-lookalike'
+DATA_ROOT = r'lol/home/loki/Datasets/spoofing/NUAA/Detectedface/casia-surf-lookalike'
 
 
 TRN_IMGS_DIR = DATA_ROOT + '/Training/'
@@ -12,9 +12,31 @@ RESIZE_SIZE = 112
 
 
 # list of training images
-def load_train_list():
+def load_train_list(path=None):
+
+    if path is None:
+        path = DATA_ROOT
+
+    path += '/train_list.txt'
+
+    f = open(path)
+    lines = f.readlines()
+
     list = []
-    path = DATA_ROOT + '/train_list.txt'
+    for line in lines:
+        line = line.strip().split(' ')
+        list.append(line)
+    return list
+
+
+# list of validation images
+def load_val_list(path=None):
+    if path is None:
+        path = DATA_ROOT
+
+    path += "/val_private_list.txt"
+
+    list = []
     f = open(path)
     lines = f.readlines()
 
@@ -24,22 +46,15 @@ def load_train_list():
     return list
 
 
-# list of validation images
-def load_val_list():
-    list = []
-    f = open(DATA_ROOT + '/val_private_list.txt')
-    lines = f.readlines()
-
-    for line in lines:
-        line = line.strip().split(' ')
-        list.append(line)
-    return list
-
-
 # list of test images
-def load_test_list():
+def load_test_list(path=None):
+    if path is None:
+        path = DATA_ROOT
+
+    path += "/test_public_list.txt"
+
     list = []
-    f = open(DATA_ROOT + '/test_public_list.txt')
+    f = open(path)
     lines = f.readlines()
 
     for line in lines:
