@@ -7,7 +7,7 @@ This is the source code for my solution to the [ChaLearn Face Anti-spoofing Atta
 
 **`2019.3.10`**: code upload for the origanizers to reproduce.
 
-#### Dependencies
+#### Dependencies - TODO - for now use requirements.txt
 - imgaug==0.2.6
 - scikit-image==0.14.0
 - scikit-learn==0.19.2
@@ -18,15 +18,15 @@ This is the source code for my solution to the [ChaLearn Face Anti-spoofing Atta
 #### Train single-modal Model
 train model_A with color imgs， patch size 48：
 ```
-CUDA_VISIBLE_DEVICES=0 python train_CyclicLR.py --model=model_A --image_mode=color --image_size=48
+CUDA_VISIBLE_DEVICES=0 python3 train_CyclicLR.py --model=model_A --image_mode=color --image_size=48 --dataset_path=<loaction of casia-surf-formatted dataset>
 ```
 infer
 ```
-CUDA_VISIBLE_DEVICES=0 python train_CyclicLR.py --mode=infer_test --model=model_A --image_mode=color --image_size=48
+CUDA_VISIBLE_DEVICES=0 python3 train_CyclicLR.py --mode=infer_test --model=model_A --image_mode=color --image_size=48
 ```
 
 
-#### Train multi-modal fusion model
+#### Train multi-modal fusion model [TODO]
 train model A fusion model with multi-modal imgs， patch size 48：
 ```
 CUDA_VISIBLE_DEVICES=0 python train_Fusion_CyclicLR.py --model=model_A --image_size=48
@@ -39,7 +39,7 @@ CUDA_VISIBLE_DEVICES=0 python train_Fusion_CyclicLR.py --mode=infer_test --model
 
 
 
-#### For the origanizers to reproduce final two submissions
+#### For the origanizers to reproduce final two submissions [TODO]
 unzip the models.zip in the root folder and infer all the trained models 
 
 infer

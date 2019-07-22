@@ -10,6 +10,9 @@ class FDDataset(Dataset):
         print('fold: '+str(fold_index))
         print(modality)
 
+        if dataset_path is None:
+            dataset_path = DATA_ROOT
+
         self.dataset_path = dataset_path
 
         self.mode = mode
@@ -80,13 +83,15 @@ class FDDataset(Dataset):
             test_id = color + ' ' + depth + ' ' + ir
 
         if self.modality=='color':
-            img_path = os.path.join(DATA_ROOT, color)
+            img_path = os.path.join(self.dataset_path, color)
         elif self.modality=='depth':
-            img_path = os.path.join(DATA_ROOT, depth)
+            img_path = os.path.join(self.dataset_path, depth)
         elif self.modality=='ir':
-            img_path = os.path.join(DATA_ROOT, ir)
+            img_path = os.path.join(self.dataset_path, ir)
 
-        image = cv2.imread(img_path,1)
+        # print(img_path)
+
+        image = cv2.imread(img_path, 1)
         image = cv2.resize(image,(RESIZE_SIZE,RESIZE_SIZE))
 
         if self.mode == 'train':
