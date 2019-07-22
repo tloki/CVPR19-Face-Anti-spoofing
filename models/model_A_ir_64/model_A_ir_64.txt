@@ -1,4 +1,4 @@
-	out_dir      = ./models/model_A_color_48
+	out_dir      = ./models/model_A_ir_64
 
 	<additional comments>
 	  ... xxx baseline  ... 

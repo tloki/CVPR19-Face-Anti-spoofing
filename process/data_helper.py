@@ -3,23 +3,26 @@ import random
 from utils import *
 
 # dataset root path
-DATA_ROOT = r'/data1/shentao/DATA/CVPR19_FaceAntiSpoofing'
+DATA_ROOT = r'/home/loki/Datasets/spoofing/NUAA/Detectedface/casia-surf-lookalike'
 
 
 TRN_IMGS_DIR = DATA_ROOT + '/Training/'
 TST_IMGS_DIR = DATA_ROOT + '/Val/'
 RESIZE_SIZE = 112
 
+
 # list of training images
 def load_train_list():
     list = []
-    f = open(DATA_ROOT + '/train_list.txt')
+    path = DATA_ROOT + '/train_list.txt'
+    f = open(path)
     lines = f.readlines()
 
     for line in lines:
         line = line.strip().split(' ')
         list.append(line)
     return list
+
 
 # list of validation images
 def load_val_list():
@@ -32,6 +35,7 @@ def load_val_list():
         list.append(line)
     return list
 
+
 # list of test images
 def load_test_list():
     list = []
@@ -43,6 +47,7 @@ def load_test_list():
         list.append(line)
 
     return list
+
 
 def transform_balance(train_list):
     print('balance!!!!!!!!')
@@ -57,6 +62,7 @@ def transform_balance(train_list):
     print(len(pos_list))
     print(len(neg_list))
     return [pos_list,neg_list]
+
 
 def submission(probs, outname, mode='valid'):
     if mode == 'valid':

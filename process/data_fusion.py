@@ -1,6 +1,6 @@
 from utils import *
-from augmentation import *
-from data_helper import *
+from process.augmentation import *
+from process.data_helper import *
 
 class FDDataset(Dataset):
     def __init__(self, mode, modality='color', fold_index='<NIL>', image_size=128, augment = None, balance = True):

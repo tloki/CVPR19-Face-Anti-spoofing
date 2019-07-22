@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch
 import torch.nn.functional as F
 import numpy as np
-from backbone.FaceBagNet import FaceBagNet_model_A
+from model.backbone.FaceBagNet import FaceBagNet_model_A
 BatchNorm2d = nn.BatchNorm2d
 
 ###########################################################################################3
