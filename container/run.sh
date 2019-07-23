@@ -4,4 +4,4 @@ dataset_path=$1
 
 echo assuming dataset in $dataset_path
 
-docker run --runtime nvidia -it -v $dataset_path:/root/dataset antispoof:latest
+docker run --runtime nvidia -it -v $dataset_path:/root/dataset antispoof:latest /bin/bash
