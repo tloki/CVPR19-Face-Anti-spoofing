@@ -1,9 +1,13 @@
 FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu18.04
 
-RUN apt-get update && apt-get install python3-dev python3-pip git
+WORKDIR /root
+
+RUN apt-get update && apt-get install python3-dev python3-pip git -y
 
 RUN cd /root && git clone https://github.com/tloki/CVPR19-Face-Anti-spoofing
 
 WORKDIR /root/CVPR19-Face-Anti-spoofing
+
+RUN pip3 install -r /root/CVPR19-Face-Anti-spoofing/requirements.txt
 
 CMD ['/usr/bin/bash']
