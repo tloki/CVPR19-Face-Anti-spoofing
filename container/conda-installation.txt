@@ -1,0 +1,12 @@
+conda install opencv
+conda install torchvision
+conda install pytorch
+conda install tqdm 
+conda install scikit-learn
+conda install scikit-image
+
++ install conda to:
+-accept license
+install to /root/miniconda3
+run conda init
+conda config --set auto_activate_base true

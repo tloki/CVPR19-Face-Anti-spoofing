@@ -7,6 +7,7 @@ import numpy as np
 from model.backbone.FaceBagNet import FaceBagNet_model_A
 BatchNorm2d = nn.BatchNorm2d
 
+
 ###########################################################################################3
 class Net(nn.Module):
     def load_pretrain(self, pretrain_file):

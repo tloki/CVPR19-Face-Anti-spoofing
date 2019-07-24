@@ -7,6 +7,7 @@ import numpy as np
 
 BatchNorm2d = nn.BatchNorm2d
 
+
 ###########################################################################################3
 class Net(nn.Module):
     def load_pretrain(self, pretrain_file):
@@ -16,9 +17,9 @@ class Net(nn.Module):
         keys = list(state_dict.keys())
         for key in keys:
             state_dict[key] = pretrain_state_dict['module.'+key]
+
         self.load_state_dict(state_dict)
         print('load: '+pretrain_file)
-
 
     def __init__(self, num_class=2, id_class = 300, is_first_bn = False):
         super(Net,self).__init__()

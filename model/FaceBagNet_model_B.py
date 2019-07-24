@@ -1,10 +1,10 @@
 from utils import *
 import torchvision.models as tvm
-import numpy as np
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
-from backbone.FaceBagNet import FaceBagNet_model_B
+import numpy as np
+from model.backbone.FaceBagNet import FaceBagNet_model_B
 BatchNorm2d = nn.BatchNorm2d
 
 

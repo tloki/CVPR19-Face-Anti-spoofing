@@ -21,6 +21,7 @@ def get_model(model_name, num_class,is_first_bn):
     net = Net(num_class=num_class,is_first_bn=is_first_bn)
     return net
 
+
 def get_augment(image_mode):
     if image_mode == 'color':
         augment = color_augumentor
@@ -29,6 +30,7 @@ def get_augment(image_mode):
     elif image_mode == 'ir':
         augment = ir_augumentor
     return augment
+
 
 def run_train(config):
     out_dir = './models'
@@ -192,8 +194,10 @@ def run_train(config):
         torch.save(net.state_dict(), ckpt_name)
         log.write('save cycle ' + str(cycle_index) + ' final model \n')
 
+
+# test (inference)
 def run_test(config, dir):
-    out_dir = './models'
+    out_dir = './models' # what
     config.model_name = config.model + '_' + config.image_mode + '_' + str(config.image_size)
     out_dir = os.path.join(out_dir,config.model_name)
     initial_checkpoint = config.pretrained_model
@@ -241,16 +245,21 @@ def run_test(config, dir):
     print('done')
     submission(out,save_dir+'_noTTA.txt', mode='test')
 
+
+# run train or dest function, dependant on input arguments
 def main(config):
     if config.mode == 'train':
         run_train(config)
 
     if config.mode == 'infer_test':
+        # take the best model on validation set
         config.pretrained_model = r'global_min_acer_model.pth'
         run_test(config, dir='global_test_36_TTA')
 
     return
 
+
+# parse input arguments and pass them to main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--train_fold_index', type=int, default = -1)
