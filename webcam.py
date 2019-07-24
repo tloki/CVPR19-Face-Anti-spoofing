@@ -12,6 +12,7 @@ from FPSmeter import *
 from utils import hisEqulColor
 import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+import torch
 
 
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -30,10 +31,20 @@ fontColor2 = (0,255,0)
 
 def main():
     # Capture device. Usually 0 will be webcam and 1 will be usb cam.
-    # video_capture = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture(0)
+
+    # load model
+    from model.FaceBagNet_model_A import Net
+    net = Net(num_class=2, is_first_bn=True)
+    net = torch.nn.DataParallel(net) # TODO: alternative?
+    net = net.cuda()
+    net.load_state_dict(torch.load("./models/model_A_color_48/checkpoint/global_min_acer_model.pth",
+                                   map_location=lambda storage, loc: storage))
+
+
 
     # if you want video instead of live webcam view:
-    video_capture = cv2.VideoCapture("/home/loki/Desktop/spoofing/Video/snimka4.mp4")
+    # video_capture = cv2.VideoCapture("/home/loki/Desktop/spoofing/Video/snimka4.mp4")
 
     video_capture.set(3, 1280)
     video_capture.set(4, 720)

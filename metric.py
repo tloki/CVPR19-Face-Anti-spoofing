@@ -146,8 +146,8 @@ def do_valid_test( net, test_loader, criterion ):
         b,n,c,w,h = input.size()
         input = input.view(b*n,c,w,h)
 
-        input = input.cuda()
-        truth = truth.cuda()
+        input = input.cuda() if torch.cuda.is_available() else input.cpu()
+        truth = truth.cuda() if torch.cuda.is_available() else truth.cpu()
 
         with torch.no_grad():
             logit,_,_   = net(input)
@@ -191,7 +191,7 @@ def infer_test( net, test_loader):
     for i, (input, truth) in enumerate(tqdm(test_loader)):
         b,n,c,w,h = input.size()
         input = input.view(b*n,c,w,h)
-        input = input.cuda()
+        input = input.cuda() if torch.cuda.is_available() else input.cpu()
 
         with torch.no_grad():
             logit,_,_   = net(input)
