@@ -80,6 +80,8 @@ def transform_balance(train_list):
 
 
 def submission(probs, outname, mode='valid'):
+    raise NotImplementedError
+    # TODO: fix stupid DATA_ROOT global dependance
     if mode == 'valid':
         f = open(DATA_ROOT + '/val_public_list.txt')
     else:

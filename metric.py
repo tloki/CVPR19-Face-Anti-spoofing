@@ -145,9 +145,14 @@ def do_valid_test( net, test_loader, criterion ):
     # for input, truth in test_loader:
         b,n,c,w,h = input.size()
         input = input.view(b*n,c,w,h)
+        # truth = None
 
-        input = input.cuda()
-        truth = truth.cuda()
+        if torch.cuda.device_count() > 0:
+            input = input.cuda()
+            truth = truth.cuda()
+        else:
+            input = input.cpu()
+            truth = truth.cpu()
 
         with torch.no_grad():
             logit,_,_   = net(input)
@@ -191,10 +196,14 @@ def infer_test( net, test_loader):
     for i, (input, truth) in enumerate(tqdm(test_loader)):
         b,n,c,w,h = input.size()
         input = input.view(b*n,c,w,h)
-        input = input.cuda()
+
+        if torch.cuda.device_count() > 0:
+            input = input.cuda()
+        else:
+            input = input.cpu()
 
         with torch.no_grad():
-            logit,_,_   = net(input)
+            logit, _, _ = net(input)
             logit = logit.view(b,n,2)
             logit = torch.mean(logit, dim = 1, keepdim = False)
             prob = F.softmax(logit, 1)

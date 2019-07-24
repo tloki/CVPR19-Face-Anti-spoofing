@@ -44,7 +44,7 @@ class Net(nn.Module):
         if self.is_first_bn:
             x = self.first_bn(x)
         else:
-            mean=[0.485, 0.456, 0.406] #rgb
+            mean=[0.485, 0.456, 0.406] # rgb
             std =[0.229, 0.224, 0.225]
 
             x = torch.cat([

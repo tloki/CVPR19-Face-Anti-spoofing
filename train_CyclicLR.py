@@ -206,8 +206,15 @@ def run_test(config, dir):
     ## net ---------------------------------------
     net = get_model(model_name=config.model, num_class=2, is_first_bn=True)
     net = torch.nn.DataParallel(net)
-    net =  net.cuda()
 
+    if torch.cuda.device_count() > 0:
+        print("using gpu")
+        net = net.cuda()
+    else:
+        print("using cpu")
+        net = net.cpu()
+
+    # checkpoints? - for inference?
     if initial_checkpoint is not None:
         save_dir = os.path.join(out_dir + '/checkpoint', dir, initial_checkpoint)
         initial_checkpoint = os.path.join(out_dir +'/checkpoint',initial_checkpoint)
@@ -219,6 +226,7 @@ def run_test(config, dir):
 
     valid_dataset = FDDataset(mode = 'val', modality=config.image_mode,image_size=config.image_size,
                               fold_index=config.train_fold_index,augment=augment, dataset_path=config.dataset_path)
+
     valid_loader  = DataLoader( valid_dataset,
                                 shuffle=False,
                                 batch_size  = config.batch_size,
@@ -237,13 +245,15 @@ def run_test(config, dir):
     criterion = softmax_cross_entropy_criterion
     net.eval()
 
-    valid_loss,out = do_valid_test(net, valid_loader, criterion)
-    print('%0.6f  %0.6f  %0.3f  (%0.3f) \n' % (valid_loss[0], valid_loss[1], valid_loss[2], valid_loss[3]))
+    # valid_loss,out = do_valid_test(net, valid_loader, criterion)
+    # print('%0.6f  %0.6f  %0.3f  (%0.3f) \n' % (valid_loss[0], valid_loss[1], valid_loss[2], valid_loss[3]))
 
     print('infer!!!!!!!!!')
     out = infer_test(net, test_loader)
     print('done')
-    submission(out,save_dir+'_noTTA.txt', mode='test')
+    print(out)
+    # submission(out, save_dir+'_noTTA.txt', mode='test')
+    # TODO: fix sumbmission...
 
 
 # run train or dest function, dependant on input arguments
