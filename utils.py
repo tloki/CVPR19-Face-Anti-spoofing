@@ -10,6 +10,18 @@ import os
 import shutil
 import sys
 import numpy as np
+import cv2
+
+# from https://stackoverflow.com/questions/15007304/histogram-equalization-not-working-on-color-image-opencv
+def hisEqulColor(img):
+    ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
+    channels = cv2.split(ycrcb)
+    print
+    len(channels)
+    cv2.equalizeHist(channels[0], channels[0])
+    cv2.merge(channels, ycrcb)
+    cv2.cvtColor(ycrcb, cv2.COLOR_YCR_CB2BGR, img)
+    return img
 
 def save(list_or_dict,name):
     f = open(name, 'w')

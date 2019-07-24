@@ -73,7 +73,7 @@ class Net(nn.Module):
             x = self.first_bn(x)
         else:
             mean=[0.485, 0.456, 0.406] #rgb
-            std =[0.229, 0.224, 0.225]
+            std =[0.229, 0.224, 0.225] # TODO: proucit
 
             x = torch.cat([
                 (x[:,[0]]-mean[0])/std[0],

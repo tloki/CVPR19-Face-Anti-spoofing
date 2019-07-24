@@ -68,11 +68,13 @@ def run_train(config):
 
     valid_dataset = FDDataset(mode = 'val', modality=config.image_mode,image_size=config.image_size,
                               fold_index=config.train_fold_index,augment=augment, dataset_path=config.dataset_path)
+
+    #TODO: autotune
     valid_loader  = DataLoader( valid_dataset,
                                 shuffle=False,
                                 batch_size = config.batch_size // 36,
                                 drop_last  = False,
-                                num_workers = 4)
+                                num_workers = 4) #TODO: batch_size?
 
     assert(len(train_dataset)>=config.batch_size)
     log.write('batch_size = %d\n'%(config.batch_size))
