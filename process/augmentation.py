@@ -3,7 +3,10 @@ import math
 import cv2
 from process.data_helper import *
 
-def random_cropping(image, target_shape=(32, 32, 3), is_random = True):
+def random_cropping(image, target_shape=(48, 48, 3), is_random = True):
+    # randomly crop part of photo. -
+
+    # resize back to 112x112 and then crop random part to target shape
     image = cv2.resize(image,(RESIZE_SIZE,RESIZE_SIZE))
     target_h, target_w,_ = target_shape
     height, width, _ = image.shape
@@ -103,27 +106,32 @@ def TTA_18_cropps(image, target_shape=(32, 32, 3)):
 
     return images
 
-def TTA_36_cropps(image, target_shape=(32, 32, 3)):
+# TODO: zasto ovo ide samo na testu?
+# jednu sliku podijeli na 36 podslika
+def TTA_36_cropps(image, target_shape=(48, 48, 3)):
+    # up to 112x112
     image = cv2.resize(image, (RESIZE_SIZE, RESIZE_SIZE))
 
     width, height, d = image.shape
     target_w, target_h, d = target_shape
 
+    # half of photo
     start_x = ( width - target_w) // 2
     start_y = ( height - target_h) // 2
 
-    starts = [[start_x, start_y],
+    starts = [[start_x, start_y], # middle
 
-              [start_x - target_w, start_y],
-              [start_x, start_y - target_w],
-              [start_x + target_w, start_y],
-              [start_x, start_y + target_w],
+              [start_x - target_w, start_y], # left middle
+              [start_x, start_y - target_w], # middle up
+              [start_x + target_w, start_y], # right middle
+              [start_x, start_y + target_w], # middle down
 
-              [start_x + target_w, start_y + target_w],
-              [start_x - target_w, start_y - target_w],
-              [start_x - target_w, start_y + target_w],
-              [start_x + target_w, start_y - target_w],
+              [start_x + target_w, start_y + target_w], # bottom right
+              [start_x - target_w, start_y - target_w], # upper left
+              [start_x - target_w, start_y + target_w], # bottom left
+              [start_x + target_w, start_y - target_w], # upper right
               ]
+    # 9 points
 
     images = []
 
@@ -131,15 +139,17 @@ def TTA_36_cropps(image, target_shape=(32, 32, 3)):
         image_ = image.copy()
         x, y = start_index
 
+        # broken to the point dirty fixing is in place
         if x < 0:
             x = 0
         if y < 0:
             y = 0
 
+        # and again, broken...
         if x + target_w >= RESIZE_SIZE:
-            x = RESIZE_SIZE - target_w-1
+            x = RESIZE_SIZE - target_w - 1
         if y + target_h >= RESIZE_SIZE:
-            y = RESIZE_SIZE - target_h-1
+            y = RESIZE_SIZE - target_h - 1
 
         zeros = image_[x:x + target_w, y: y+target_h, :]
 
@@ -190,10 +200,14 @@ def random_erasing(img, probability = 0.5, sl = 0.02, sh = 0.5, r1 = 0.5, channe
 
     return img
 
+
 def random_resize(img, probability = 0.5,  minRatio = 0.2):
+    # decide with probability 'probability' to resize the photo
+    # absolute crime to do it like this
     if random.uniform(0, 1) > probability:
         return img
 
+    # to which resolution to resize (from radio 0.2 to 1.0, with uniform probability)
     ratio = random.uniform(minRatio, 1.0)
 
     h = img.shape[0]
@@ -206,14 +220,18 @@ def random_resize(img, probability = 0.5,  minRatio = 0.2):
     img = cv2.resize(img, (w, h))
     return img
 
-def color_augumentor(image, target_shape=(32, 32, 3), is_infer=False):
+
+def color_augumentor(image, target_shape=(48, 48, 3), is_infer=False):
+
     if is_infer:
         augment_img = iaa.Sequential([
             iaa.Fliplr(0),
-        ])
+        ]) # TODO: does not seem to have any effect...
 
-        image =  augment_img.augment_image(image)
+        image = augment_img.augment_image(image)
         image = TTA_36_cropps(image, target_shape)
+
+        # return tensors of 36 patches
         return image
 
     else:
@@ -221,12 +239,13 @@ def color_augumentor(image, target_shape=(32, 32, 3), is_infer=False):
             iaa.Fliplr(0.5),
             iaa.Flipud(0.5),
             iaa.Affine(rotate=(-30, 30)),
-        ], random_order=True)
+        ], random_order=True) # TODO: should this be 45?
 
-        image = augment_img.augment_image(image)
-        image = random_resize(image)
-        image = random_cropping(image, target_shape, is_random=True)
+        image = augment_img.augment_image(image) # do upper augmentation
+        image = random_resize(image) # with probability 50%, resize to 20-100% (uniform distrib)
+        image = random_cropping(image, target_shape, is_random=True) # randomly crop
         return image
+
 
 def depth_augumentor(image, target_shape=(32, 32, 3), is_infer=False):
     if is_infer:
@@ -250,6 +269,7 @@ def depth_augumentor(image, target_shape=(32, 32, 3), is_infer=False):
         image = random_cropping(image, target_shape, is_random=True)
         return image
 
+
 def ir_augumentor(image, target_shape=(32, 32, 3), is_infer=False):
     if is_infer:
         augment_img = iaa.Sequential([
@@ -271,3 +291,30 @@ def ir_augumentor(image, target_shape=(32, 32, 3), is_infer=False):
         image = random_cropping(image, target_shape, is_random=True)
         return image
 
+
+if __name__ == "__main__":
+    # import os
+    # print(os.getcwd())
+
+    cv2.namedWindow("lala")
+
+    lenna = cv2.imread("lenna.jpeg", 1)
+    # print(lenna)q
+    cv2.imshow('lala', lenna)
+    k = chr(cv2.waitKey())
+
+    # image = np.transpose(lenna, (2, 0, 1))
+    # print(image.shape)
+    # cv2.imshow('lala', image)
+    # k = chr(cv2.waitKey())
+
+    # cv2.waitKey(1) & 0xFF == ord('q')
+
+    dest = TTA_36_cropps(lenna)
+    print(len(dest))
+    for img in dest:
+        print(img.shape)
+        cv2.imshow('lala', img[0])
+        k = chr(cv2.waitKey())
+
+    cv2.destroyAllWindows()

@@ -39,7 +39,7 @@ class Net(nn.Module):
         self.id_fc = nn.Sequential(nn.Linear(2048, id_class))
 
     def forward(self, x):
-        batch_size,C,H,W = x.shape
+        batch_size, C, H, W = x.shape
 
         if self.is_first_bn:
             x = self.first_bn(x)

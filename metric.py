@@ -196,7 +196,7 @@ def infer_test( net, test_loader):
         with torch.no_grad():
             logit,_,_   = net(input)
             logit = logit.view(b,n,2)
-            logit = torch.mean(logit, dim = 1, keepdim = False)
+            logit = torch.mean(logit, dim=1, keepdim=False)
             prob = F.softmax(logit, 1)
 
         valid_num += len(input)

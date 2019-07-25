@@ -33,13 +33,18 @@ def get_augment(image_mode):
 
 
 def run_train(config):
+    # figuring out the path (dependant of model (A, B, C), image mode (color, ir, depth), image size (32, 48...))
     out_dir = './models'
     config.model_name = config.model + '_' + config.image_mode + '_' + str(config.image_size)
     out_dir = os.path.join(out_dir,config.model_name)
+
+
     initial_checkpoint = config.pretrained_model
+
+
     criterion  = softmax_cross_entropy_criterion
 
-    ## setup  -----------------------------------------------------------------------------
+    ## make checkpoint, backup dirs ------------------------------
     if not os.path.exists(out_dir +'/checkpoint'):
         os.makedirs(out_dir +'/checkpoint')
     if not os.path.exists(out_dir +'/backup'):
@@ -47,8 +52,9 @@ def run_train(config):
     if not os.path.exists(out_dir +'/backup'):
         os.makedirs(out_dir +'/backup')
 
+    # verbose output into txt file (configuration etc.)
     log = Logger()
-    log.open(os.path.join(out_dir,config.model_name+'.txt'),mode='a')
+    log.open(os.path.join(out_dir,config.model_name+'.txt'), mode='a')
     log.write('\tout_dir      = %s\n' % out_dir)
     log.write('\n')
     log.write('\t<additional comments>\n')
@@ -57,24 +63,41 @@ def run_train(config):
 
     ## dataset ----------------------------------------
     log.write('** dataset setting **\n')
+
+    # this is now a function (without parameters being passed yet..)
     augment = get_augment(config.image_mode)
+
+    ######################
+    #  Train #############
+    ######################
+
+    # inherits Dataset (torch)
+    # rotate, scale, augument images
+    # fold index ne sluzi nicemu, zasad...
     train_dataset = FDDataset(mode = 'train', modality=config.image_mode,image_size=config.image_size,
                               fold_index=config.train_fold_index,augment=augment, dataset_path=config.dataset_path)
+
+    # custom object (not torch inherited)
+    # important to have __setattr__, __iter__, __len__
     train_loader  = DataLoader(train_dataset,
                                 shuffle=True,
                                 batch_size  = config.batch_size,
                                 drop_last   = True,
                                 num_workers = 4)
 
+    ######################
+    # Validation ########
+    ######################
+
     valid_dataset = FDDataset(mode = 'val', modality=config.image_mode,image_size=config.image_size,
                               fold_index=config.train_fold_index,augment=augment, dataset_path=config.dataset_path)
 
-    #TODO: autotune
-    valid_loader  = DataLoader( valid_dataset,
-                                shuffle=False,
-                                batch_size = config.batch_size // 36,
-                                drop_last  = False,
-                                num_workers = 4) #TODO: batch_size?
+    #TODO: parameters? autotune?
+    valid_loader  = DataLoader(valid_dataset,
+                               shuffle=False,
+                               batch_size = config.batch_size // 36,
+                               drop_last  = False,
+                               num_workers = 4)  # TODO: batch_size?
 
     assert(len(train_dataset)>=config.batch_size)
     log.write('batch_size = %d\n'%(config.batch_size))
@@ -84,11 +107,12 @@ def run_train(config):
     log.write('** net setting **\n')
 
     net = get_model(model_name=config.model, num_class=2, is_first_bn=True)
+
     print(net)
+
     net = torch.nn.DataParallel(net)
 
-
-    net =  net.cuda() if torch.cuda.is_available() else net.cpu()
+    net = net.cuda() if torch.cuda.is_available() else net.cpu()
 
     if initial_checkpoint is not None:
         initial_checkpoint = os.path.join(out_dir +'/checkpoint',initial_checkpoint)
@@ -110,7 +134,7 @@ def run_train(config):
     log.write('----------------------------------------------------------------------------------------------------\n')
 
     iter = 0
-    i    = 0
+    i = 0
 
     train_loss = np.zeros(6, np.float32)
     valid_loss = np.zeros(6, np.float32)
@@ -199,55 +223,6 @@ def run_train(config):
         log.write('save cycle ' + str(cycle_index) + ' final model \n')
 
 
-def predict(image, model_path='./models/model_A_color_48/checkpoint/global_test_26_TTA'):
-    # out_dir = './models'  # what
-    # config.model_name = config.model + '_' + config.image_mode + '_' + str(config.image_size)
-    # out_dir = os.path.join(out_dir, config.model_name)
-    # initial_checkpoint = config.pretrained_model
-    # augment = get_augment(config.image_mode)
-
-    ## net ---------------------------------------
-    net = get_model(model_path, num_class=2, is_first_bn=True)
-    net = torch.nn.DataParallel(net)
-    net = net.cuda() if torch.cuda.is_available() else net.cpu()
-
-
-    # if initial_checkpoint is not None:
-    #     save_dir = os.path.join(out_dir + '/checkpoint', dir, initial_checkpoint)
-    #     initial_checkpoint = os.path.join(out_dir + '/checkpoint', initial_checkpoint)
-    #     print('\tinitial_checkpoint = %s\n' % initial_checkpoint)
-    #     net.load_state_dict(torch.load(initial_checkpoint, map_location=lambda storage, loc: storage))
-    #     if not os.path.exists(os.path.join(out_dir + '/checkpoint', dir)):
-    #         os.makedirs(os.path.join(out_dir + '/checkpoint', dir))
-
-    valid_dataset = FDDataset(mode='val', modality=config.image_mode, image_size=config.image_size,
-                              fold_index=config.train_fold_index, augment=augment, dataset_path=config.dataset_path)
-    valid_loader = DataLoader(valid_dataset,
-                              shuffle=False,
-                              batch_size=config.batch_size,
-                              drop_last=False,
-                              num_workers=8)
-
-    test_dataset = FDDataset(mode='test', modality=config.image_mode, image_size=config.image_size,
-                             fold_index=config.train_fold_index, augment=augment, dataset_path=config.dataset_path)
-
-    test_loader = DataLoader(test_dataset,
-                             shuffle=False,
-                             batch_size=config.batch_size,
-                             drop_last=False,
-                             num_workers=8)
-
-    criterion = softmax_cross_entropy_criterion
-    net.eval()
-
-    valid_loss, out = do_valid_test(net, valid_loader, criterion)
-    print('%0.6f  %0.6f  %0.3f  (%0.3f) \n' % (valid_loss[0], valid_loss[1], valid_loss[2], valid_loss[3]))
-
-    print('infer!!!!!!!!!')
-    out = infer_test(net, test_loader)
-    print('done')
-    submission(out, save_dir + '_noTTA.txt', mode='test')
-
 # test (inference)
 def run_test(config, dir):
     out_dir = './models' # what
@@ -256,7 +231,7 @@ def run_test(config, dir):
     initial_checkpoint = config.pretrained_model
     augment = get_augment(config.image_mode)
 
-    ## net ---------------------------------------
+    # net ---------------------------------------
     net = get_model(model_name=config.model, num_class=2, is_first_bn=True)
     net = torch.nn.DataParallel(net)
     net = net.cuda() if torch.cuda.is_available() else net.cpu()
@@ -320,12 +295,12 @@ if __name__ == '__main__':
     parser.add_argument('--train_fold_index', type=int, default = -1)
 
     parser.add_argument('--model', type=str, default='model_A')
-    parser.add_argument('--image_mode', type=str, default='rgb')
-    parser.add_argument('--image_size', type=int, default=64)
+    parser.add_argument('--image_mode', type=str, default='depth', choices=['color', 'depth', 'ir'])
+    parser.add_argument('--image_size', type=int, default=48) # empirically adjusted
 
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--cycle_num', type=int, default=10)
-    parser.add_argument('--cycle_inter', type=int, default=50)
+    parser.add_argument('--cycle_inter', type=int, default=50) # aka number of epochs
 
     parser.add_argument('--mode', type=str, default='train', choices=['train','infer_test'])
     parser.add_argument('--pretrained_model', type=str, default=None)

@@ -3,7 +3,7 @@ import cv2
 from process.data_helper import *
 
 class FDDataset(Dataset):
-    def __init__(self, mode, modality='color', fold_index=-1, image_size=128, augment=None, augmentor=None,
+    def __init__(self, mode, modality='color', fold_index=-1, image_size=48, augment=None, augmentor=None,
                  balance=True, dataset_path=None):
 
         super(FDDataset, self).__init__()
@@ -18,15 +18,18 @@ class FDDataset(Dataset):
         self.mode = mode
         self.modality = modality
 
-        self.augment = augment
-        self.augmentor = augmentor
+        self.augment = augment # this is set
+        self.augmentor = augmentor # this is None
         self.balance = balance
 
         self.channels = 3
+
+        # TODO: is this unused?
         self.train_image_path = TRN_IMGS_DIR
         self.test_image_path = TST_IMGS_DIR
+
         self.image_size = image_size
-        self.fold_index = fold_index
+        self.fold_index = fold_index # ovo doslovno nicemu ne sluzi
 
         self.set_mode(self.mode,self.fold_index)
 
@@ -35,41 +38,53 @@ class FDDataset(Dataset):
         self.fold_index = fold_index
         print('fold index set: ', fold_index)
 
+        # differentiate between train and test
+        # the only difference being - path of txt file with a list of data
+        # train set in shuffled + balanced
         if self.mode == 'test':
             self.test_list = load_test_list(path=self.dataset_path)
             self.num_data = len(self.test_list)
             print('set dataset mode: test')
 
+        # validation
         elif self.mode == 'val':
             self.val_list = load_val_list(path=self.dataset_path)
             self.num_data = len(self.val_list)
             print('set dataset mode: test')
 
+        # train
         elif self.mode == 'train':
             self.train_list = load_train_list(path=self.dataset_path)
 
             random.shuffle(self.train_list)
             self.num_data = len(self.train_list)
 
+            # just split list in positives and negatives...
             if self.balance:
                 self.train_list = transform_balance(self.train_list)
             print('set dataset mode: train')
 
         print(self.num_data)
 
-    def __getitem__(self, index):
+    # get i-th item, except if balance param is set (if so, return random sample, ignoring the given index)
+    def __getitem__(self, index): # FDDataset_instance[index]
 
         if self.fold_index is None:
-            print('WRONG!!!!!!! fold index is NONE!!!!!!!!!!!!!!!!!')
-            return
+            # print('WRONG!!!!!!! fold index is NONE!!!!!!!!!!!!!!!!!')
+            raise ValueError("fold index is NONE")
 
+        # get some color, depth, ir, label (color, depth and ir are PATHS, not imgs (yet))
         if self.mode == 'train':
+            # choose true/false sample with equal probs,
+            # does not take 'index' as parameter
             if self.balance:
-                if random.randint(0,1)==0:
+                # 'uniform' - not really but ok for what it is...
+                if random.randint(0, 1)==0:
                     tmp_list = self.train_list[0]
                 else:
                     tmp_list = self.train_list[1]
 
+                # random sample, given label (label of random choice in list)
                 pos = random.randint(0,len(tmp_list)-1)
                 color, depth, ir, label = tmp_list[pos]
             else:
@@ -81,7 +96,11 @@ class FDDataset(Dataset):
         elif self.mode == 'test':
             color, depth, ir = self.test_list[index]
             test_id = color + ' ' + depth + ' ' + ir
+        else:
+            raise ValueError("mode expected to be in (train, test, val), but got '{}' instead".format(self.mode))
 
+
+        # get full path, choose only a needed modality
         if self.modality=='color':
             img_path = os.path.join(self.dataset_path, color)
         elif self.modality=='depth':
@@ -91,22 +110,34 @@ class FDDataset(Dataset):
 
         # print(img_path)
 
+        # load BGR (color) image, resize photo to 112 x 112
         image = cv2.imread(img_path, 1)
         image = cv2.resize(image,(RESIZE_SIZE,RESIZE_SIZE))
 
+
         if self.mode == 'train':
+            # self.augment (for color) == color_augumentor, ir = ir_augumentor, dpth = depth_augumentor
+            # randomly flip hoirzontally, flip vertically, blur, rotate, crop part of photo,
             image = self.augment(image, target_shape=(self.image_size, self.image_size, 3))
 
+            # resize to dest
             image = cv2.resize(image, (self.image_size, self.image_size))
+
+            # channel, width, height
             image = np.transpose(image, (2, 0, 1))
             image = image.astype(np.float32)
             image = image.reshape([self.channels, self.image_size, self.image_size])
-            image = image / 255.0
+            image = image / 255.0 # convert to float 0-1
             label = int(label)
 
-            return torch.FloatTensor(image), torch.LongTensor(np.asarray(label).reshape([-1]))
+            # return tensor of 3 channel image, and 1x1 tensor with label (integer)
+            inpt = torch.FloatTensor(image)
+            labl = torch.LongTensor(np.asarray(label).reshape([-1]))
+            return inpt, labl
 
         elif self.mode == 'val':
+            # randomly flip hoirzontally, flip vertically, blur, rotate, crop part of photo,
+            # also make 36 patches from images
             image = self.augment(image, target_shape=(self.image_size, self.image_size, 3), is_infer = True)
 
             n = len(image)
@@ -119,7 +150,9 @@ class FDDataset(Dataset):
             image = image / 255.0
             label = int(label)
 
-            return torch.FloatTensor(image), torch.LongTensor(np.asarray(label).reshape([-1]))
+            inpt = torch.FloatTensor(image)
+            labl = torch.LongTensor(np.asarray(label).reshape([-1]))
+            return inpt, labl
 
         elif self.mode == 'test':
             image = self.augment(image, target_shape=(self.image_size, self.image_size, 3), is_infer = True)
@@ -130,7 +163,12 @@ class FDDataset(Dataset):
             image = image.reshape([n, self.channels, self.image_size, self.image_size])
             image = image / 255.0
 
-            return torch.FloatTensor(image), test_id
+            inpt = torch.FloatTensor(image)
+
+            return inpt, test_id
+
+        else:
+            raise ValueError("Expected mode to be in (train, val, test), got '{}'".format(self.mode))
 
 
     def __len__(self):
@@ -139,7 +177,7 @@ class FDDataset(Dataset):
 
 # check #################################################################
 def run_check_train_data():
-    from augmentation import color_augumentor
+    from process.augmentation import color_augumentor
     augment = color_augumentor
     dataset = FDDataset(mode = 'train', fold_index=-1, image_size=32,  augment=augment)
     print(dataset)

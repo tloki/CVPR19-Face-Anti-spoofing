@@ -2,6 +2,7 @@ import torch
 import math
 from torch.optim.lr_scheduler import _LRScheduler
 
+
 class CosineAnnealingLR_with_Restart(_LRScheduler):
     """Set the learning rate of each parameter group using a cosine annealing
     schedule, where :math:`\eta_{max}` is set to the initial lr and
