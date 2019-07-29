@@ -13,6 +13,11 @@ from utils import hisEqulColor
 import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 import torch
+from process.augmentation import TTA_36_cropps, color_augumentor
+from metric import infer_test, infer_test_simple
+
+# TODO: use contants glbaly (including patch size of 48)
+RESIZE_SIZE = 112 # from data _helper import RESIZE_SIZE
 
 
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -28,6 +33,16 @@ fontColor2 = (0,255,0)
 
 
 
+# test_dataset = FDDataset(mode = 'test', modality=config.image_mode,image_size=config.image_size,
+#                               fold_index=config.train_fold_index,augment=augment, dataset_path=config.dataset_path)
+#
+# test_loader  = DataLoader( test_dataset,
+#                             shuffle=False,
+#                             batch_size  = config.batch_size,
+#                             drop_last   = False,
+#                             num_workers=8)
+
+
 
 def main():
     # Capture device. Usually 0 will be webcam and 1 will be usb cam.
@@ -37,7 +52,8 @@ def main():
     from model.FaceBagNet_model_A import Net
     net = Net(num_class=2, is_first_bn=True)
     net = torch.nn.DataParallel(net) # TODO: alternative?
-    net = net.cuda()
+    # net = net.cuda()
+    net = net.cpu()
     net.load_state_dict(torch.load("./models/model_A_color_48/checkpoint/global_min_acer_model.pth",
                                    map_location=lambda storage, loc: storage))
 
@@ -85,12 +101,32 @@ def main():
                     cv2.putText(frame_hist_eq, "id: "+ str(i), (bbox[0] , bbox[1] - 5), font, fontScale, fontColor,
                                 lineType)
 
+                    # TODO: do not hardcode face index
                     if i == 0:
-                        crop_img = frame_hist_eq[bbox[1]:bbox[1]+bbox[3], bbox[0]:bbox[0]+bbox[2]]
-                        cv2.imshow('crop', crop_img)
+                        crop_img = frame[bbox[1]:bbox[1]+bbox[3], bbox[0]:bbox[0]+bbox[2]]
+
+                        infer_img = deepcopy(crop_img)
+                        infer_img = cv2.resize(infer_img, (RESIZE_SIZE, RESIZE_SIZE))
+
+                        infer_img = color_augumentor(infer_img, target_shape=(48, 48, 3), is_infer=True)
+                        n = len(infer_img)
+
+                        infer_img = np.concatenate(infer_img, axis=0)
+                        infer_img = np.transpose(infer_img, (0, 3, 1, 2))
+                        infer_img = infer_img.astype(np.float32)
+                        infer_img = infer_img.reshape([n, 3, 48, 48])
+                        infer_img = infer_img / 255.0
+
+                        inpt = torch.FloatTensor([infer_img])
+                        data = [[inpt, inpt]]
+
+                        result = infer_test_simple(net, data)
+                        print(result)
+
+                        cv2.imshow("id: "+ str(i), crop_img)
 
 
-            cv2.putText(frame_hist_eq, 'Not ' * (not bool(detection)) +'Detected', TopLeftCornerOfPicture, font,
+            cv2.putText(frame_hist_eq, 'Not '*(not bool(detection)) +'Detected', TopLeftCornerOfPicture, font,
                         fontScale, fontColor2 if detection else fontColor, lineType)
 
             fps.tick(frame_hist_eq)

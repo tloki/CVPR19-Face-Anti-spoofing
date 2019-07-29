@@ -189,13 +189,14 @@ def infer_test( net, test_loader):
     probs = []
 
     for i, (input, truth) in enumerate(tqdm(test_loader)):
-        b,n,c,w,h = input.size()
+        b, n, c, w, h = input.size()
+        # print(b, n, c, w, h)
         input = input.view(b*n,c,w,h)
         input = input.cuda() if torch.cuda.is_available() else input.cpu()
 
         with torch.no_grad():
             logit,_,_   = net(input)
-            logit = logit.view(b,n,2)
+            logit = logit.view(b, n, 2)
             logit = torch.mean(logit, dim=1, keepdim=False)
             prob = F.softmax(logit, 1)
 
@@ -206,4 +207,26 @@ def infer_test( net, test_loader):
     return probs[:, 1]
 
 
+def infer_test_simple( net, test_loader):
+    valid_num  = 0
+    probs = []
 
+    for input, truth in test_loader:
+        b, n, c, w, h = input.size()
+        # print(b, n, c, w, h)
+        input = input.view(b*n,c,w,h)
+        input = input.cuda() if torch.cuda.is_available() else input.cpu()
+
+        with torch.no_grad():
+            logit,_,_   = net(input)
+            logit = logit.view(b, n, 2)
+            logit = torch.mean(logit, dim=1, keepdim=False)
+            prob = F.softmax(logit, 1)
+
+        valid_num += len(input)
+        probs.append(prob.data.cpu().numpy())
+
+    probs = np.concatenate(probs)
+    probs = probs[:, 1]
+
+    return probs

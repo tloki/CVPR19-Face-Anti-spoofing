@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-nuaa_dir=$1
+combine_dir=$1
+#nuaa_dir=$2
+#boks_dir=$3
+
+
 
 echo nua dir located in $nuaa_dir
 

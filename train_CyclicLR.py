@@ -175,7 +175,19 @@ def run_train(config):
                 input = input.cuda() if torch.cuda.is_available() else input.cpu()
                 truth = truth.cuda() if torch.cuda.is_available() else truth.cpu()
 
+
+
                 logit,_,_ = net.forward(input)
+
+                input_img = input.detach().numpy()
+
+                for img in input_img:
+                    r, g, b = img
+                    cv2.imshow('R kanal', img[0])
+                    k = chr(cv2.waitKey())
+
+                cv2.destroyAllWindows()
+
                 truth = truth.view(logit.shape[0])
 
                 loss  = criterion(logit, truth)

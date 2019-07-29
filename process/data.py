@@ -117,7 +117,7 @@ class FDDataset(Dataset):
 
         if self.mode == 'train':
             # self.augment (for color) == color_augumentor, ir = ir_augumentor, dpth = depth_augumentor
-            # randomly flip hoirzontally, flip vertically, blur, rotate, crop part of photo,
+            # randomly flip hoirzontally, flip vertically, blur, rotate, crop part of photo, backout part of photo
             image = self.augment(image, target_shape=(self.image_size, self.image_size, 3))
 
             # resize to dest
@@ -136,8 +136,7 @@ class FDDataset(Dataset):
             return inpt, labl
 
         elif self.mode == 'val':
-            # randomly flip hoirzontally, flip vertically, blur, rotate, crop part of photo,
-            # also make 36 patches from images
+            # make 36 patches from image
             image = self.augment(image, target_shape=(self.image_size, self.image_size, 3), is_infer = True)
 
             n = len(image)

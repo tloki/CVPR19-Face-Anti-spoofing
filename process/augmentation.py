@@ -239,7 +239,7 @@ def color_augumentor(image, target_shape=(48, 48, 3), is_infer=False):
             iaa.Fliplr(0.5),
             iaa.Flipud(0.5),
             iaa.Affine(rotate=(-30, 30)),
-        ], random_order=True) # TODO: should this be 45?
+        ], random_order=True) #
 
         image = augment_img.augment_image(image) # do upper augmentation
         image = random_resize(image) # with probability 50%, resize to 20-100% (uniform distrib)
