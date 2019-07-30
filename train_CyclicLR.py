@@ -32,6 +32,17 @@ def get_augment(image_mode):
     return augment
 
 
+def get_n_params(model):
+    pp = 0
+    for p in list(model.parameters()):
+        nn = 1
+        print("layer")
+        for s in list(p.size()):
+            nn = nn*s
+        pp += nn
+    return pp
+
+
 def run_train(config):
     # figuring out the path (dependant of model (A, B, C), image mode (color, ir, depth), image size (32, 48...))
     out_dir = './models'
@@ -127,6 +138,8 @@ def run_train(config):
     start_iter = 0
     log.write('\n')
 
+    print(get_n_params(net))
+
     ## start training here! ##############################################
     log.write('** start training here! **\n')
     log.write('                                  |------------ VALID -------------|-------- TRAIN/BATCH ----------|         \n')
@@ -175,18 +188,16 @@ def run_train(config):
                 input = input.cuda() if torch.cuda.is_available() else input.cpu()
                 truth = truth.cuda() if torch.cuda.is_available() else truth.cpu()
 
-
-
                 logit,_,_ = net.forward(input)
 
-                input_img = input.detach().numpy()
-
-                for img in input_img:
-                    r, g, b = img
-                    cv2.imshow('R kanal', img[0])
-                    k = chr(cv2.waitKey())
-
-                cv2.destroyAllWindows()
+                # input_img = input.detach().numpy()
+                #
+                # for img in input_img:
+                #     r, g, b = img
+                #     cv2.imshow('R kanal', img[0])
+                #     k = chr(cv2.waitKey())
+                #
+                # cv2.destroyAllWindows()
 
                 truth = truth.view(logit.shape[0])
 
@@ -307,7 +318,7 @@ if __name__ == '__main__':
     parser.add_argument('--train_fold_index', type=int, default = -1)
 
     parser.add_argument('--model', type=str, default='model_A')
-    parser.add_argument('--image_mode', type=str, default='depth', choices=['color', 'depth', 'ir'])
+    parser.add_argument('--image_mode', type=str, default='color', choices=['color', 'depth', 'ir'])
     parser.add_argument('--image_size', type=int, default=48) # empirically adjusted
 
     parser.add_argument('--batch_size', type=int, default=128)

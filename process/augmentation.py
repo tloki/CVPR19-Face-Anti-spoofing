@@ -106,7 +106,7 @@ def TTA_18_cropps(image, target_shape=(32, 32, 3)):
 
     return images
 
-# TODO: zasto ovo ide samo na testu?
+# ovo ide samo na testu!
 # jednu sliku podijeli na 36 podslika
 def TTA_36_cropps(image, target_shape=(48, 48, 3)):
     # up to 112x112
