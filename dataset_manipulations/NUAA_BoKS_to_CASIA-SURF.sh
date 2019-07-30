@@ -49,8 +49,13 @@ label=1
 
 for i in $nua_jpg; do
 
+    echo $i
+    exit -1
+
+
     person=`echo $i | cut -c 1-4`
-    path="${nuaa_dir}/Detectedface/ClientFace/${i}"
+    subdir=`echo $i| grep -io "^[0-9]\+"`
+    path="${nuaa_dir}/Detectedface/ClientFace/${subdir}/${i}"
 
     echo "${path} NoIR NoDepth ${label}" >> $combine_dir/nuaa_bonafide.txt
 
@@ -70,7 +75,8 @@ label=0
 for i in $nua_jpg; do
 
     person=`echo $i | cut -c 1-4`
-    path="${nuaa_dir}/Detectedface/ClientFace/${i}"
+    subdir=`echo $i| grep -io "^[0-9]\+"`
+    path="${nuaa_dir}/Detectedface/ImposterFace/${subdir}/${i}"
 
     echo "${path} NoIR NoDepth ${label}" >> $combine_dir/nuaa_presentation.txt
 
