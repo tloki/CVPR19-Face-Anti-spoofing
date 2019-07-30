@@ -114,7 +114,7 @@ class FDDataset(Dataset):
         image = cv2.imread(img_path, 1)
 
         if image is None:
-            raise RuntimeError("Sample {} not found".format_map(img_path))
+            raise RuntimeError("Sample {} not found".format(img_path))
 
         image = cv2.resize(image,(RESIZE_SIZE,RESIZE_SIZE))
 
