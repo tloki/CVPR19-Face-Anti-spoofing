@@ -49,8 +49,8 @@ label=1
 
 for i in $nua_jpg; do
 
-    echo $i
-    exit -1
+    #echo $i
+    #exit -1
 
 
     person=`echo $i | cut -c 1-4`

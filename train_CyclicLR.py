@@ -36,7 +36,7 @@ def get_n_params(model):
     pp = 0
     for p in list(model.parameters()):
         nn = 1
-        print("layer")
+        # print("layer")
         for s in list(p.size()):
             nn = nn*s
         pp += nn
@@ -154,12 +154,12 @@ def run_train(config):
     batch_loss = np.zeros(6, np.float32)
 
     start = timer()
-    #-----------------------------------------------
+    # -----------------------------------------------
     optimizer = optim.SGD(filter(lambda p: p.requires_grad, net.parameters()),
                           lr=0.1, momentum=0.9, weight_decay=0.0005)
 
     sgdr = CosineAnnealingLR_with_Restart(optimizer,
-                                          T_max=config.cycle_inter,
+                                          T_max=config.epochs,
                                           T_mult=1,
                                           model=net,
                                           out_dir='../input/',
@@ -171,7 +171,7 @@ def run_train(config):
         print('cycle index: ' + str(cycle_index))
         min_acer = 1.0
 
-        for epoch in range(0, config.cycle_inter):
+        for epoch in range(0, config.epochs):
             sgdr.step()
             lr = optimizer.param_groups[0]['lr']
             print('lr : {:.4f}'.format(lr))
@@ -217,7 +217,8 @@ def run_train(config):
                     sum = 0
                 i=i+1
 
-            if epoch >= config.cycle_inter // 2:
+            # if epoch >= config.epochs // 2:
+            if epoch >= 0:
                 net.eval()
                 valid_loss,_ = do_valid_test(net, valid_loader, criterion)
                 net.train()
@@ -323,11 +324,18 @@ if __name__ == '__main__':
 
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--cycle_num', type=int, default=10)
-    parser.add_argument('--cycle_inter', type=int, default=50) # aka number of epochs
+    parser.add_argument('--epochs', type=int, default=50) # aka number of epochs
 
     parser.add_argument('--mode', type=str, default='train', choices=['train','infer_test'])
     parser.add_argument('--pretrained_model', type=str, default=None)
     parser.add_argument('--dataset_path', type=str, default="/home/loki/Datasets/spoofing/NUAA/Detectedface")
+
+    parser.add_argument('--dataset-workers', type=str, default=4)
+
+    # TODO: implement
+    parser.add_argument('--train_list', type=str, default=None)
+    parser.add_argument('--validation_list', type=str, default=None)
+    parser.add_argument('--test_list', type=str, default=None)
 
     config = parser.parse_args()
 

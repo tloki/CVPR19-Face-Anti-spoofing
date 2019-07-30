@@ -141,8 +141,9 @@ def do_valid_test( net, test_loader, criterion ):
     labels = []
 
 
-    for i, (input, truth) in enumerate(tqdm(test_loader)):
+    # for i, (input, truth) in enumerate(tqdm(test_loader)):
     # for input, truth in test_loader:
+    for i, (input, truth) in enumerate(test_loader):
         b,n,c,w,h = input.size()
         input = input.view(b*n,c,w,h)
 
@@ -181,6 +182,9 @@ def do_valid_test( net, test_loader, criterion ):
     valid_loss = np.array([
         loss, acer, acc, correct
     ])
+
+    print("TPR: {}% FPR: {}% ACC: {}% ACER: {}% LOSS: {} Correct: {}/{})".format(tpr*100, fpr*100, acc*100, acer*100,
+                                                                                 loss, correct, ))
 
     return valid_loss,[probs[:, 1], labels]
 
