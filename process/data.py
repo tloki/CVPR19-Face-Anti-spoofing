@@ -112,7 +112,8 @@ class FDDataset(Dataset):
 
         # load BGR (color) image, resize photo to 112 x 112
         image = cv2.imread(img_path, 1)
-        if img_path is None:
+
+        if image is None:
             raise RuntimeError("Sample {} not found".format_map(img_path))
 
         image = cv2.resize(image,(RESIZE_SIZE,RESIZE_SIZE))
