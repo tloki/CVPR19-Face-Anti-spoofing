@@ -220,7 +220,7 @@ def run_train(config):
                 i=i+1
 
             # if epoch >= config.epochs // 2:
-            if epoch >= 0:
+            if epoch >= config.epochs_valid_start:
                 net.eval()
 
                 t1 = time.time()
@@ -244,11 +244,18 @@ def run_train(config):
 
             asterisk = ' '
 
-            log.write(config.model_name+' Cycle %d: %0.4f %5.1f %d | %0.6f  %0.6f  %0.3f %s  | %0.6f  %0.6f |%s \n' % (
-                cycle_index, lr, iter, epoch,
-                valid_loss[0], valid_loss[1], valid_loss[2], asterisk,
-                batch_loss[0], batch_loss[1],
-                time_to_str((timer() - start), 'min')))
+            if epoch >= config.epochs_valid_start:
+                log.write(config.model_name+' Cycle %d: %0.4f %5.1f %d | %0.6f  %0.6f  %0.3f %s  | %0.6f  %0.6f |%s \n' % (
+                    cycle_index, lr, iter, epoch,
+                    valid_loss[0], valid_loss[1], valid_loss[2], asterisk,
+                    batch_loss[0], batch_loss[1],
+                    time_to_str((timer() - start), 'min')))
+            else:
+                log.write(
+                    config.model_name + ' Cycle %d: %0.4f %5.1f %d | %0.6f  %0.6f |%s \n' % (
+                        cycle_index, lr, iter, epoch,
+                        batch_loss[0], batch_loss[1],
+                        time_to_str((timer() - start), 'min')))
 
         ckpt_name = out_dir + '/checkpoint/Cycle_' + str(cycle_index) + '_final_model.pth'
         torch.save(net.state_dict(), ckpt_name)
@@ -334,6 +341,7 @@ if __name__ == '__main__':
     parser.add_argument('--valid_batch_size', type=int, default=128)
     parser.add_argument('--cycle_num', type=int, default=10)
     parser.add_argument('--epochs', type=int, default=50) # aka number of epochs
+    parser.add_argument('--epochs_valid_start', type=int, default=50)  # aka number of epochs
 
     parser.add_argument('--mode', type=str, default='train', choices=['train','infer_test'])
     parser.add_argument('--pretrained_model', type=str, default=None)
