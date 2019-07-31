@@ -110,7 +110,7 @@ def run_train(config):
                                drop_last  = False,
                                num_workers = config.dataset_workers)
 
-    assert(len(train_dataset)>=config.batch_size)
+    assert(len(train_dataset)>=config.train_batch_size)
     log.write('batch_size = %d\n'%(config.batch_size))
     log.write('train_dataset : \n%s\n'%(train_dataset))
     log.write('valid_dataset : \n%s\n'%(valid_dataset))
