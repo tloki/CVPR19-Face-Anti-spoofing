@@ -103,7 +103,7 @@ def main():
 
                     # TODO: do not hardcode face index
                     if i == 0:
-                        crop_img = frame_hist_eq[bbox[1]:bbox[1]+bbox[3], bbox[0]:bbox[0]+bbox[2]]
+                        crop_img = frame[bbox[1]:bbox[1]+bbox[3], bbox[0]:bbox[0]+bbox[2]]
 
                         infer_img = deepcopy(crop_img)
                         infer_img = cv2.resize(infer_img, (RESIZE_SIZE, RESIZE_SIZE))
