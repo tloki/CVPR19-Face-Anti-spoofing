@@ -166,7 +166,7 @@ def do_valid_test( net, test_loader, criterion ):
         labels.append(truth.data.cpu().numpy())
 
     # assert(valid_num == len(test_loader.sampler))
-    #----------------------------------------------
+    # ----------------------------------------------
 
     correct = np.concatenate(corrects)
     loss    = np.concatenate(losses)
@@ -178,16 +178,18 @@ def do_valid_test( net, test_loader, criterion ):
     labels = np.concatenate(labels)
 
     tpr, fpr, acc = calculate_accuracy(0.5, probs[:,1], labels)
-    acer,_,_,_,_ = ACER(0.5, probs[:, 1], labels)
+    acer, _, _, _, _ = ACER(0.5, probs[:, 1], labels)
 
     valid_loss = np.array([
         loss, acer, acc, correct
     ])
 
-    print("tpr: {0:.2f}% fpr: {0:.2f}% acc: {0:.2f}% acer: {0:.2f}% loss: {} corrct: {0:.2f}%)".format(tpr*100, fpr*100, acc*100, acer*100,
-                                                                                                        loss, correct))
+    print()
+    print("tpr: {:.2f}% fpr: {:.2f}% acc: {:.2f}% acer: {:.2f}% loss: {} corrct: {:.2f}%)".format(
+        tpr*100, fpr*100, acc*100, acer*100, loss, correct))
 
     return valid_loss,[probs[:, 1], labels]
+
 
 def infer_test( net, test_loader):
     valid_num  = 0

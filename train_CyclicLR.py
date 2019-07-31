@@ -55,7 +55,7 @@ def run_train(config):
 
     criterion  = softmax_cross_entropy_criterion
 
-    ## make checkpoint, backup dirs ------------------------------
+    # make checkpoint, backup dirs ------------------------------
     if not os.path.exists(out_dir +'/checkpoint'):
         os.makedirs(out_dir +'/checkpoint')
     if not os.path.exists(out_dir +'/backup'):
@@ -92,7 +92,7 @@ def run_train(config):
     # important to have __setattr__, __iter__, __len__
     train_loader  = DataLoader(train_dataset,
                                 shuffle=True,
-                                batch_size  = config.batch_size,
+                                batch_size  = config.train_batch_size,
                                 drop_last   = True,
                                 num_workers = 4)
 
@@ -106,9 +106,9 @@ def run_train(config):
     #TODO: parameters? autotune?
     valid_loader  = DataLoader(valid_dataset,
                                shuffle=False,
-                               batch_size = config.batch_size // 36,
+                               batch_size = config.valid_batch_size // 36,
                                drop_last  = False,
-                               num_workers = 4)  # TODO: batch_size?
+                               num_workers = config.dataset_workers)
 
     assert(len(train_dataset)>=config.batch_size)
     log.write('batch_size = %d\n'%(config.batch_size))
@@ -322,7 +322,8 @@ if __name__ == '__main__':
     parser.add_argument('--image_mode', type=str, default='color', choices=['color', 'depth', 'ir'])
     parser.add_argument('--image_size', type=int, default=48) # empirically adjusted
 
-    parser.add_argument('--batch_size', type=int, default=128)
+    parser.add_argument('--train_batch_size', type=int, default=128)
+    parser.add_argument('--valid_batch_size', type=int, default=128)
     parser.add_argument('--cycle_num', type=int, default=10)
     parser.add_argument('--epochs', type=int, default=50) # aka number of epochs
 
@@ -330,7 +331,7 @@ if __name__ == '__main__':
     parser.add_argument('--pretrained_model', type=str, default=None)
     parser.add_argument('--dataset_path', type=str, default="/home/loki/Datasets/spoofing/NUAA/Detectedface")
 
-    parser.add_argument('--dataset-workers', type=str, default=4)
+    parser.add_argument('--dataset-workers', type=int, default=4)
 
     # TODO: implement
     parser.add_argument('--train_list', type=str, default=None)
