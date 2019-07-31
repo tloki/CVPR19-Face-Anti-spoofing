@@ -237,11 +237,16 @@ def run_train(config):
                     log.write('save global min acer model: ' + str(min_acer) + '\n')
 
             asterisk = ' '
+            tm = "None"
+            try:
+                tm = time_to_str((timer() - start), 'min')
+            except:
+                tm="None"
             log.write(config.model_name+' Cycle %d: %0.4f %5.1f %6 | %0.6f  %0.6f  %0.3f %s  | %0.6f  %0.6f |%s \n' % (
                 cycle_index, lr, iter, epoch,
                 valid_loss[0], valid_loss[1], valid_loss[2], asterisk,
                 batch_loss[0], batch_loss[1],
-                time_to_str((timer() - start), 'min')))
+                tm))
 
         ckpt_name = out_dir + '/checkpoint/Cycle_' + str(cycle_index) + '_final_model.pth'
         torch.save(net.state_dict(), ckpt_name)
