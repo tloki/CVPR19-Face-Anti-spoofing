@@ -96,6 +96,18 @@ def main(config):
 
 
         dest_img_fullpath = os.path.join(img_dest_dir, dest_image_name)
+
+        # if "0145.jpg" in dest_img_fullpath:
+        #     continue
+
+        if crop_img.shape[0] * crop_img.shape[1] == 0:
+            wrn1 = "image '{}' detected face dimensions: {}".format(dest_img_fullpath, crop_img.shape)
+            num_det_problems += 1
+            wrn = "{}. det size dim == 0 on {}. skipping...".format(num_det_problems, image_path)
+            warnings.warn(wrn1 + "\n" + wrn)
+            # raise UserWarning()
+            continue
+
         cv2.imwrite(dest_img_fullpath, crop_img)
 
 

@@ -170,6 +170,7 @@ def do_valid_test( net, test_loader, criterion ):
 
     correct = np.concatenate(corrects)
     loss    = np.concatenate(losses)
+    ll = len(losses)
     loss    = loss.mean()
     correct = np.mean(correct)
 
@@ -184,7 +185,7 @@ def do_valid_test( net, test_loader, criterion ):
     ])
 
     print("TPR: {}% FPR: {}% ACC: {}% ACER: {}% LOSS: {} Correct: {}/{})".format(tpr*100, fpr*100, acc*100, acer*100,
-                                                                                 loss, correct, ))
+                                                                                 loss, correct, ll))
 
     return valid_loss,[probs[:, 1], labels]
 
