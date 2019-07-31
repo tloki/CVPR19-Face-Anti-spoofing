@@ -62,8 +62,8 @@ def main():
     # if you want video instead of live webcam view:
     # video_capture = cv2.VideoCapture("/home/loki/Desktop/spoofing/Video/snimka4.mp4")
 
-    video_capture.set(3, 640)
-    video_capture.set(4, 480)
+    video_capture.set(3, 1280)
+    video_capture.set(4, 720)
 
     minsize = 25  # minimum size of face
     threshold = [0.6, 0.7, 0.7]  # three steps's threshold
@@ -103,7 +103,7 @@ def main():
 
                     # TODO: do not hardcode face index
                     if i == 0:
-                        crop_img = frame[bbox[1]:bbox[1]+bbox[3], bbox[0]:bbox[0]+bbox[2]]
+                        crop_img = frame_hist_eq[bbox[1]:bbox[1]+bbox[3], bbox[0]:bbox[0]+bbox[2]]
 
                         infer_img = deepcopy(crop_img)
                         infer_img = cv2.resize(infer_img, (RESIZE_SIZE, RESIZE_SIZE))

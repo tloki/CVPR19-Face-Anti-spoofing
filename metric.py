@@ -184,8 +184,8 @@ def do_valid_test( net, test_loader, criterion ):
         loss, acer, acc, correct
     ])
 
-    print("TPR: {}% FPR: {}% ACC: {}% ACER: {}% LOSS: {} Correct: {}/{})".format(tpr*100, fpr*100, acc*100, acer*100,
-                                                                                 loss, correct, ll))
+    print("tpr: {0:.2f}% fpr: {0:.2f}% acc: {0:.2f}% acer: {0:.2f}% loss: {} corrct: {0:.2f}%)".format(tpr*100, fpr*100, acc*100, acer*100,
+                                                                                                        loss, correct))
 
     return valid_loss,[probs[:, 1], labels]
 
