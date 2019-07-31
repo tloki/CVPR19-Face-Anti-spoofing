@@ -242,7 +242,7 @@ def run_train(config):
                 tm = time_to_str((timer() - start), 'min')
             except:
                 tm="None"
-            log.write(config.model_name+' Cycle %d: %0.4f %5.1f %6 | %0.6f  %0.6f  %0.3f %s  | %0.6f  %0.6f |%s \n' % (
+            log.write(config.model_name+' Cycle %d: %0.4f %5.1f %d | %0.6f  %0.6f  %0.3f %s  | %0.6f  %0.6f |%s \n' % (
                 cycle_index, lr, iter, epoch,
                 valid_loss[0], valid_loss[1], valid_loss[2], asterisk,
                 batch_loss[0], batch_loss[1],
