@@ -226,7 +226,7 @@ def run_train(config):
                 t1 = time.time()
                 valid_loss,_ = do_valid_test(net, valid_loader, criterion)
                 t2 = time.time()  - t1
-                print("validation time: {.:2f} seconds".format(t2))
+                print("validation time: {:.2f} seconds".format(t2))
 
                 net.train()
 
