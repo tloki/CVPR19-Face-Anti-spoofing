@@ -106,7 +106,7 @@ def run_train(config):
     #TODO: parameters? autotune?
     valid_loader  = DataLoader(valid_dataset,
                                shuffle=False,
-                               batch_size = config.valid_batch_size // 36,
+                               batch_size = max(1, config.valid_batch_size // 36),
                                drop_last  = False,
                                num_workers = config.dataset_workers)
 
@@ -237,7 +237,7 @@ def run_train(config):
                     log.write('save global min acer model: ' + str(min_acer) + '\n')
 
             asterisk = ' '
-            log.write(config.model_name+' Cycle %d: %0.4f %5.1f %6.1f | %0.6f  %0.6f  %0.3f %s  | %0.6f  %0.6f |%s \n' % (
+            log.write(config.model_name+' Cycle %d: %0.4f %5.1f %6 | %0.6f  %0.6f  %0.3f %s  | %0.6f  %0.6f |%s \n' % (
                 cycle_index, lr, iter, epoch,
                 valid_loss[0], valid_loss[1], valid_loss[2], asterisk,
                 batch_loss[0], batch_loss[1],

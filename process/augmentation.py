@@ -220,6 +220,7 @@ def random_resize(img, probability = 0.5,  minRatio = 0.2):
     img = cv2.resize(img, (w, h))
     return img
 
+# def quarter_color_augumentor(image, ):
 
 def color_augumentor(image, target_shape=(48, 48, 3), is_infer=False):
 
