@@ -7,7 +7,7 @@ from process.data import *
 from process.augmentation import *
 from metric import *
 from loss.cyclic_lr import CosineAnnealingLR_with_Restart
-from time import time
+import time
 
 def get_model(model_name, num_class,is_first_bn):
     if model_name == 'baseline':
