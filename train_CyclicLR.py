@@ -7,6 +7,7 @@ from process.data import *
 from process.augmentation import *
 from metric import *
 from loss.cyclic_lr import CosineAnnealingLR_with_Restart
+from time import time
 
 def get_model(model_name, num_class,is_first_bn):
     if model_name == 'baseline':
@@ -221,7 +222,12 @@ def run_train(config):
             # if epoch >= config.epochs // 2:
             if epoch >= 0:
                 net.eval()
+
+                t1 = time.time()
                 valid_loss,_ = do_valid_test(net, valid_loader, criterion)
+                t2 = time.time()  - t1
+                print("validation time: {.:2f} seconds".format(t2))
+
                 net.train()
 
                 if valid_loss[1] < min_acer and epoch > 0:
@@ -237,16 +243,12 @@ def run_train(config):
                     log.write('save global min acer model: ' + str(min_acer) + '\n')
 
             asterisk = ' '
-            tm = "None"
-            try:
-                tm = time_to_str((timer() - start), 'min')
-            except:
-                tm="None"
+
             log.write(config.model_name+' Cycle %d: %0.4f %5.1f %d | %0.6f  %0.6f  %0.3f %s  | %0.6f  %0.6f |%s \n' % (
                 cycle_index, lr, iter, epoch,
                 valid_loss[0], valid_loss[1], valid_loss[2], asterisk,
                 batch_loss[0], batch_loss[1],
-                tm))
+                time_to_str((timer() - start), 'min')))
 
         ckpt_name = out_dir + '/checkpoint/Cycle_' + str(cycle_index) + '_final_model.pth'
         torch.save(net.state_dict(), ckpt_name)
