@@ -52,8 +52,8 @@ def main():
     from model.FaceBagNet_model_A import Net
     net = Net(num_class=2, is_first_bn=True)
     net = torch.nn.DataParallel(net) # TODO: alternative?
-    # net = net.cuda()
-    net = net.cpu()
+    net = net.cuda()
+    # net = net.cpu()
     net.load_state_dict(torch.load("./models/model_A_color_48/checkpoint/global_min_acer_model.pth",
                                    map_location=lambda storage, loc: storage))
 
@@ -62,8 +62,8 @@ def main():
     # if you want video instead of live webcam view:
     # video_capture = cv2.VideoCapture("/home/loki/Desktop/spoofing/Video/snimka4.mp4")
 
-    video_capture.set(3, 1280)
-    video_capture.set(4, 720)
+    video_capture.set(3, 640)
+    video_capture.set(4, 480)
 
     minsize = 25  # minimum size of face
     threshold = [0.6, 0.7, 0.7]  # three steps's threshold
@@ -86,6 +86,8 @@ def main():
 
             frame2 = deepcopy(frame)
             frame_hist_eq = hisEqulColor(frame2)
+
+            # frame =
 
             detection = detector.detect_faces(frame)
 
@@ -121,6 +123,10 @@ def main():
                         data = [[inpt, inpt]]
 
                         result = infer_test_simple(net, data)
+                        # result = result[0]
+                        # result = round(result)
+                        # result = bool(result)
+                        # result = "OK"*(result) + "FAKE"*(not result)
                         print(result)
 
                         cv2.imshow("id: "+ str(i), crop_img)
