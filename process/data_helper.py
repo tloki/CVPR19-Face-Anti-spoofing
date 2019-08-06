@@ -18,7 +18,7 @@ def load_train_list(path=None):
     if path is None:
         path = DATA_ROOT
 
-    path += '/train_list.txt'
+    # path += '/train_list.txt'
 
     f = open(path)
     lines = f.readlines()
@@ -35,7 +35,7 @@ def load_val_list(path=None):
     if path is None:
         path = DATA_ROOT
 
-    path += "/val_private_list.txt"
+    # path += "/val_private_list.txt"
 
     list = []
     f = open(path)
@@ -52,7 +52,7 @@ def load_test_list(path=None):
     if path is None:
         path = DATA_ROOT
 
-    path += "/test_public_list.txt"
+    # path += "/test_public_list.txt"
 
     list = []
     f = open(path)

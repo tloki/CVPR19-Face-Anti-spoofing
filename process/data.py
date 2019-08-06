@@ -2,9 +2,11 @@ from utils import *
 import cv2
 from process.data_helper import *
 
+
 class FDDataset(Dataset):
     def __init__(self, mode, modality='color', fold_index=-1, image_size=48, augment=None, augmentor=None,
-                 balance=True, dataset_path=None):
+                 balance=True, dataset_path=None, stream_device=None, width=1280, height=720, display_window=None,
+                 detect_function=None):
 
         super(FDDataset, self).__init__()
         print('fold: '+str(fold_index))
@@ -24,6 +26,14 @@ class FDDataset(Dataset):
 
         self.channels = 3
 
+        self.stream_service = stream_device
+        self.width = width
+        self.height = height
+
+        self.detect_function = detect_function
+
+        self.display_window = display_window
+
         # TODO: is this unused?
         self.train_image_path = TRN_IMGS_DIR
         self.test_image_path = TST_IMGS_DIR
@@ -31,6 +41,7 @@ class FDDataset(Dataset):
         self.image_size = image_size
         self.fold_index = fold_index # ovo doslovno nicemu ne sluzi
 
+        self.capture = None
         self.set_mode(self.mode,self.fold_index)
 
     def set_mode(self, mode, fold_index):
@@ -44,7 +55,13 @@ class FDDataset(Dataset):
         if self.mode == 'test':
             self.test_list = load_test_list(path=self.dataset_path)
             self.num_data = len(self.test_list)
-            print('set dataset mode: test')
+            print('set dataset mode: test, dataset length: {}'.format(len(self.test_list)))
+            n_out_samples = 10
+            n_out_samples = min(n_out_samples, len(self.test_list))
+            print("first {} samples:".format(n_out_samples))
+            for i in range(n_out_samples):
+                print(self.test_list[i])
+            print()
 
         # validation
         elif self.mode == 'val':
@@ -64,10 +81,59 @@ class FDDataset(Dataset):
                 self.train_list = transform_balance(self.train_list)
             print('set dataset mode: train')
 
+        elif self.mode == 'realtime':
+            print('set realtime camera/video capture')
+
+            if self.stream_service.isdigit():
+                self.stream_service = int(self.stream_service)
+            self.capture = cv2.VideoCapture(self.stream_service)
+            self.capture.set(3, self.width)
+            self.capture.set(4, self.height)
+            self.num_data = None
+
+        else:
+            ValueError("unimplemented mode '{}'".format(self.mode))
+
         print(self.num_data)
+
+    def livestream(self):
+        detected = False
+        crop_img = None
+
+        while not detected:
+            # video stream util face is detected
+            ret, frame = self.capture.read()
+
+            if not ret:
+                raise RuntimeError("invalid frame return value")
+
+            detection = self.detect_function(frame)
+
+            if not detection:
+                detected = False
+            else:
+                detected = True
+
+                for i, bbox in enumerate(detection):
+                    bbox = bbox['box']
+                    pt1 = bbox[0], bbox[1]
+                    pt2 = bbox[0] + bbox[2], bbox[1] + int(bbox[3])
+
+                    cv2.rectangle(frame, pt1, pt2, color=(0, 255, 0), thickness=2)
+                    cv2.putText(frame, "id: "+ str(i), (bbox[0] , bbox[1] - 5), cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale=1, color=(0, 0, 255), thickness=2)
+
+                    # TODO: do not hardcode face index
+                    if i == 0:
+                        crop_img = frame[bbox[1]:bbox[1]+bbox[3], bbox[0]:bbox[0]+bbox[2]]
+                        # cv2.imshow("id: "+ str(i), crop_img)
+        return crop_img
+
 
     # get i-th item, except if balance param is set (if so, return random sample, ignoring the given index)
     def __getitem__(self, index): # FDDataset_instance[index]
+
+        image = None
 
         if self.fold_index is None:
             # print('WRONG!!!!!!! fold index is NONE!!!!!!!!!!!!!!!!!')
@@ -88,38 +154,51 @@ class FDDataset(Dataset):
                 pos = random.randint(0,len(tmp_list)-1)
                 color, depth, ir, label = tmp_list[pos]
             else:
-                color,depth,ir,label = self.train_list[index]
+                color, depth, ir, label = self.train_list[index]
 
         elif self.mode == 'val':
-            color,depth,ir,label = self.val_list[index]
+            color, depth, ir, label = self.val_list[index]
 
         elif self.mode == 'test':
-            color, depth, ir = self.test_list[index]
+            color, depth, ir = self.test_list[index][0:3]
             test_id = color + ' ' + depth + ' ' + ir
+        elif self.mode == 'realtime':
+            self.modality = None
+            image = self.livestream()
         else:
-            raise ValueError("mode expected to be in (train, test, val), but got '{}' instead".format(self.mode))
+            raise ValueError("mode expected to be in (train, test, val, realtime), but got '{}' instead".format(
+                self.mode))
 
-
+        img_path = None
         # get full path, choose only a needed modality
-        if self.modality=='color':
+        if self.modality == 'color':
             img_path = os.path.join(self.dataset_path, color)
-        elif self.modality=='depth':
+        elif self.modality == 'depth':
             img_path = os.path.join(self.dataset_path, depth)
-        elif self.modality=='ir':
+        elif self.modality == 'ir':
             img_path = os.path.join(self.dataset_path, ir)
 
-        # print(img_path)
+        if self.mode != 'realtime':
+            # load BGR (color) image, resize photo to 112 x 112
+            image = cv2.imread(img_path, 1)
 
-        # load BGR (color) image, resize photo to 112 x 112
-        image = cv2.imread(img_path, 1)
+        if self.mode == 'realtime':
+            cv2.imshow("Face", image)
+            print("size: ", image.shape, end="\t")
+            image = self.augment(image, target_shape=(self.image_size, self.image_size, 3), is_infer=True)
+            n = len(image)
+            image = np.concatenate(image, axis=0)
+            image = np.transpose(image, (0, 3, 1, 2))
+            image = image.astype(np.float32)
+            image = image.reshape([n, self.channels, self.image_size, self.image_size])
+            image = np.array([image])
+            image = image / 255.0
 
-        if image is None:
-            raise RuntimeError("Sample {} not found".format(img_path))
+            inpt = torch.FloatTensor(image)
 
-        image = cv2.resize(image,(RESIZE_SIZE,RESIZE_SIZE))
+            return inpt, None
 
-
-        if self.mode == 'train':
+        elif self.mode == 'train':
             # self.augment (for color) == color_augumentor, ir = ir_augumentor, dpth = depth_augumentor
             # randomly flip hoirzontally, flip vertically, blur, rotate, crop part of photo, backout part of photo
             image = self.augment(image, target_shape=(self.image_size, self.image_size, 3))
@@ -182,7 +261,7 @@ class FDDataset(Dataset):
 def run_check_train_data():
     from process.augmentation import color_augumentor
     augment = color_augumentor
-    dataset = FDDataset(mode = 'train', fold_index=-1, image_size=32,  augment=augment)
+    dataset = FDDataset(mode='train', fold_index=-1, image_size=32,  augment=augment)
     print(dataset)
 
     num = len(dataset)
@@ -191,6 +270,7 @@ def run_check_train_data():
         image, label = dataset[m]
         print(image.shape)
         print(label.shape)
+
 
 # main #################################################################
 if __name__ == '__main__':

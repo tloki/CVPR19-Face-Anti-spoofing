@@ -156,7 +156,7 @@ def do_valid_test( net, test_loader, criterion ):
             logit = torch.mean(logit, dim = 1, keepdim = False)
 
             truth = truth.view(logit.shape[0])
-            loss    = criterion(logit, truth, False)
+            loss = criterion(logit, truth, False)
             correct, prob = metric(logit, truth)
 
         valid_num += len(input)
@@ -169,9 +169,9 @@ def do_valid_test( net, test_loader, criterion ):
     # ----------------------------------------------
 
     correct = np.concatenate(corrects)
-    loss    = np.concatenate(losses)
+    loss = np.concatenate(losses)
     ll = len(losses)
-    loss    = loss.mean()
+    loss = loss.mean()
     correct = np.mean(correct)
 
     probs = np.concatenate(probs)
@@ -185,14 +185,14 @@ def do_valid_test( net, test_loader, criterion ):
     ])
 
     print()
-    print("tpr: {:.2f}% fpr: {:.2f}% acc: {:.2f}% acer: {:.2f}% loss: {:.23f} corrct: {:.2f}".format(
-        tpr*100, fpr*100, acc*100, acer*100, loss, correct))
+    print("[valid] tpr: {:.2f}% fpr: {:.2f}% acc: {:.2f}% acer: {:.2f}% loss: {:.5f} crct: {:.2f}%".format(
+        tpr*100, fpr*100, acc*100, acer*100, loss, correct*100))
 
     return valid_loss,[probs[:, 1], labels]
 
 
-def infer_test( net, test_loader):
-    valid_num  = 0
+def infer_test(net, test_loader):
+    valid_num = 0
     probs = []
 
     for i, (input, truth) in enumerate(tqdm(test_loader)):
@@ -202,7 +202,7 @@ def infer_test( net, test_loader):
         input = input.cuda() if torch.cuda.is_available() else input.cpu()
 
         with torch.no_grad():
-            logit,_,_   = net(input)
+            logit, _, _ = net(input)
             logit = logit.view(b, n, 2)
             logit = torch.mean(logit, dim=1, keepdim=False)
             prob = F.softmax(logit, 1)
@@ -215,7 +215,7 @@ def infer_test( net, test_loader):
 
 
 def infer_test_simple( net, test_loader):
-    valid_num  = 0
+    valid_num = 0
     probs = []
 
     for input, truth in test_loader:
@@ -225,13 +225,56 @@ def infer_test_simple( net, test_loader):
         input = input.cuda() if torch.cuda.is_available() else input.cpu()
 
         with torch.no_grad():
-            logit,_,_   = net(input)
+            logit, _ , _ = net(input)
             logit = logit.view(b, n, 2)
             logit = torch.mean(logit, dim=1, keepdim=False)
             prob = F.softmax(logit, 1)
 
         valid_num += len(input)
         probs.append(prob.data.cpu().numpy())
+
+    probs = np.concatenate(probs)
+    probs = probs[:, 1]
+
+    return probs
+
+
+def infer_test_infinite( net, test_loader):
+    import cv2
+    valid_num = 0
+    probs = []
+
+    # tl = test_loader.__iter__()
+
+    while True:
+        # for input, truth in test_loader:
+
+        try:
+            input, truth = test_loader[0]
+        except:
+            continue
+
+        inp = input.size()
+        b, n, c, w, h = inp
+        # print(b, n, c, w, h)
+        input = input.view(b*n,c,w,h)
+        input = input.cuda() if torch.cuda.is_available() else input.cpu()
+
+        # print("ok")
+        with torch.no_grad():
+            logit, _ , _ = net(input)
+            logit = logit.view(b, n, 2)
+            logit = torch.mean(logit, dim=1, keepdim=False)
+            prob = F.softmax(logit, 1)
+
+        is_real = list(prob.data.cpu().numpy()[:, 1])[0]
+        print((is_real>0.5)*"ok" + (is_real<0.5)*"FAKE", is_real)
+
+        valid_num += len(input)
+        probs.append(prob.data.cpu().numpy())
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
     probs = np.concatenate(probs)
     probs = probs[:, 1]

@@ -1,0 +1,133 @@
+	out_dir      = ./models/model_A_color_48
+
+	<additional comments>
+	  ... xxx baseline  ... 
+
+** dataset setting **
+train_batch_size = 128
+valid_batch_size = 128
+train_dataset : 
+<process.data.FDDataset object at 0x7f9ae309cba8>
+valid_dataset : 
+<process.data.FDDataset object at 0x7f9ae3319c50>
+
+** net setting **
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion=<function softmax_cross_entropy_criterion at 0x7f9afce96488>
+
+
+** start training here! **
+                                  |------------ VALID -------------|-------- TRAIN/BATCH ----------|         
+model_name   lr   iter  epoch     |     loss      acer      acc    |     loss              acc     |  time   
+----------------------------------------------------------------------------------------------------
+	out_dir      = ./models/model_A_color_48
+
+	<additional comments>
+	  ... xxx baseline  ... 
+
+** dataset setting **
+	out_dir      = ./models/model_A_color_48
+
+	<additional comments>
+	  ... xxx baseline  ... 
+
+** dataset setting **
+	out_dir      = ./models/model_A_color_48
+
+	<additional comments>
+	  ... xxx baseline  ... 
+
+** dataset setting **
+train_batch_size = 128
+valid_batch_size = 128
+train_dataset : 
+<process.data.FDDataset object at 0x7fb2affb8d30>
+valid_dataset : 
+<process.data.FDDataset object at 0x7fb2affb8fd0>
+
+** net setting **
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion=<function softmax_cross_entropy_criterion at 0x7fb2c9b2f400>
+
+
+** start training here! **
+                                  |------------ VALID -------------|-------- TRAIN/BATCH ----------|         
+model_name   lr   iter  epoch     |     loss      acer      acc    |     loss              acc     |  time   
+----------------------------------------------------------------------------------------------------
+	out_dir      = ./models/model_A_color_48
+
+	<additional comments>
+	  ... xxx baseline  ... 
+
+** dataset setting **
+train_batch_size = 128
+valid_batch_size = 128
+train_dataset : 
+<process.data.FDDataset object at 0x7f73b81eed30>
+valid_dataset : 
+<process.data.FDDataset object at 0x7f73b81eefd0>
+
+** net setting **
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion=<function softmax_cross_entropy_criterion at 0x7f741463d400>
+
+
+** start training here! **
+                                  |------------ VALID -------------|-------- TRAIN/BATCH ----------|         
+model_name   lr   iter  epoch     |     loss      acer      acc    |     loss              acc     |  time   
+----------------------------------------------------------------------------------------------------
+model_A_color_48 Cycle 0: 0.0999  72.0 0 | 0.195799  0.929688 | 0 hr 00 min 
+model_A_color_48 Cycle 0: 0.0996 145.0 1 | 0.176541  0.921875 | 0 hr 01 min 
+	out_dir      = ./models/model_A_color_48
+
+	<additional comments>
+	  ... xxx baseline  ... 
+
+** dataset setting **
+train_batch_size = 128
+valid_batch_size = 576
+train_dataset : 
+<process.data.FDDataset object at 0x7f9c9f6dfe80>
+valid_dataset : 
+<process.data.FDDataset object at 0x7f9c9f464048>
+
+** net setting **
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion=<function softmax_cross_entropy_criterion at 0x7f9cb9256400>
+
+
+** start training here! **
+                                  |------------ VALID -------------|-------- TRAIN/BATCH ----------|         
+model_name   lr   iter  epoch     |     loss      acer      acc    |     loss              acc     |  time   
+----------------------------------------------------------------------------------------------------
+model_A_color_48 Cycle 0: 0.1000  72.0 0 | 0.140859  0.945312 | 0 hr 00 min 
+	out_dir      = ./models/model_A_color_48
+
+	<additional comments>
+	  ... xxx baseline  ... 
+
+** dataset setting **
+train_batch_size = 128
+valid_batch_size = 576
+train_dataset : 
+<process.data.FDDataset object at 0x7f9d8d888e80>
+valid_dataset : 
+<process.data.FDDataset object at 0x7f9d8d60e0b8>
+
+** net setting **
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion=<function softmax_cross_entropy_criterion at 0x7f9de9cd7400>
+
+
+** start training here! **
+                                  |------------ VALID -------------|-------- TRAIN/BATCH ----------|         
+model_name   lr   iter  epoch     |     loss      acer      acc    |     loss              acc     |  time   
+----------------------------------------------------------------------------------------------------
+model_A_color_48 Cycle 0: 0.1000  72.0 0 | 0.162123  0.921875 | 0 hr 00 min 
+model_A_color_48 Cycle 0: 0.1000 145.0 1 | 0.114725  0.953125 | 0 hr 01 min 
+model_A_color_48 Cycle 0: 0.1000 218.0 2 | 0.119543  0.968750 | 0 hr 02 min 
+model_A_color_48 Cycle 0: 0.0999 291.0 3 | 0.113136  0.945312 | 0 hr 03 min 
+model_A_color_48 Cycle 0: 0.0999 364.0 4 | 0.109577  0.953125 | 0 hr 03 min 
+save cycle 0 min acer model: 0.08418239076404013
+save global min acer model: 0.08418239076404013
+model_A_color_48 Cycle 0: 0.0999 437.0 5 | 0.413221  0.084182  0.911    | 0.119806  0.968750 | 0 hr 07 min 
