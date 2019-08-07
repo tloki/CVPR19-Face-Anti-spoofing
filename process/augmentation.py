@@ -222,8 +222,9 @@ def random_resize(img, probability = 0.5,  minRatio = 0.2):
 
 # def quarter_color_augumentor(image, ):
 
-def color_augumentor(image, target_shape=(48, 48, 3), is_infer=False):
 
+def color_augumentor(image, target_shape=(48, 48, 3), is_infer=False):
+    # print(image.shape)
     if is_infer:
         augment_img = iaa.Sequential([
             iaa.Fliplr(0),
@@ -242,9 +243,11 @@ def color_augumentor(image, target_shape=(48, 48, 3), is_infer=False):
             iaa.Affine(rotate=(-30, 30)),
         ], random_order=True) #
 
+        # print(image.shape)
         image = augment_img.augment_image(image) # do upper augmentation
         image = random_resize(image) # with probability 50%, resize to 20-100% (uniform distrib)
         image = random_cropping(image, target_shape, is_random=True) # randomly crop
+        # print(image.shape)
         return image
 
 

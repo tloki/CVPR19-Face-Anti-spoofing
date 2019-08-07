@@ -55,13 +55,13 @@ class FDDataset(Dataset):
         if self.mode == 'test':
             self.test_list = load_test_list(path=self.dataset_path)
             self.num_data = len(self.test_list)
-            print('set dataset mode: test, dataset length: {}'.format(len(self.test_list)))
+            print('set dataset mode: test')
             n_out_samples = 10
             n_out_samples = min(n_out_samples, len(self.test_list))
             print("first {} samples:".format(n_out_samples))
             for i in range(n_out_samples):
                 print(self.test_list[i])
-            print()
+            print("dataset length (number of samples): ", end="")
 
         # validation
         elif self.mode == 'val':
@@ -95,6 +95,7 @@ class FDDataset(Dataset):
             ValueError("unimplemented mode '{}'".format(self.mode))
 
         print(self.num_data)
+        print()
 
     def livestream(self):
         detected = False
@@ -181,6 +182,8 @@ class FDDataset(Dataset):
         if self.mode != 'realtime':
             # load BGR (color) image, resize photo to 112 x 112
             image = cv2.imread(img_path, 1)
+            if image is None:
+                raise RuntimeError("unable to open image {}".format(img_path))
 
         if self.mode == 'realtime':
             cv2.imshow("Face", image)

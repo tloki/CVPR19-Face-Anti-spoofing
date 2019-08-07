@@ -12,6 +12,7 @@ import sys
 import numpy as np
 import cv2
 
+
 # from https://stackoverflow.com/questions/15007304/histogram-equalization-not-working-on-color-image-opencv
 def hisEqulColor(img):
     ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
@@ -22,10 +23,12 @@ def hisEqulColor(img):
     cv2.cvtColor(ycrcb, cv2.COLOR_YCR_CB2BGR, img)
     return img
 
+
 def save(list_or_dict,name):
     f = open(name, 'w')
     f.write(str(list_or_dict))
     f.close()
+
 
 def load(name):
     f = open(name, 'r')
@@ -34,10 +37,12 @@ def load(name):
     f.close()
     return tmp
 
+
 def acc(preds,targs,th=0.0):
     preds = (preds > th).int()
     targs = targs.int()
     return (preds==targs).float().mean()
+
 
 def dot_numpy(vector1 , vector2,emb_size = 512):
     vector1 = vector1.reshape([-1, emb_size])
@@ -46,18 +51,24 @@ def dot_numpy(vector1 , vector2,emb_size = 512):
     cosV12 = np.dot(vector1, vector2)
     return cosV12
 
+
 def to_var(x, volatile=False):
     if torch.cuda.is_available():
         x = x.cuda()
     return Variable(x, volatile=volatile)
 
+
+# this one is used on train
 def softmax_cross_entropy_criterion(logit, truth, is_average=True):
-    loss = F.cross_entropy(logit, truth, reduce=is_average)
+    # loss = F.cross_entropy(logit, truth, reduce=is_average) # deprecated
+    loss = F.cross_entropy(logit, truth, reduction='elementwise_mean' if is_average else 'none')
     return loss
+
 
 def bce_criterion(logit, truth, is_average=True):
     loss = F.binary_cross_entropy_with_logits(logit, truth, reduce=is_average)
     return loss
+
 
 def remove_comments(lines, token='#'):
     """ Generator. Strips comments and whitespace from input lines.
@@ -125,3 +136,5 @@ def np_float32_to_uint8(x, scale=255.0):
 def np_uint8_to_float32(x, scale=255.0):
     return (x/scale).astype(np.float32)
 
+def dummy(*args, **kwargs):
+    pass

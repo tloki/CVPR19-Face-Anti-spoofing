@@ -68,7 +68,7 @@ class CosineAnnealingLR_with_Restart(_LRScheduler):
 
         ## restart
         if self.current_epoch == self.Te:
-            print("restart at epoch {:03d}".format(self.last_epoch + 1))
+            # print("restart at epoch {:03d}".format(self.last_epoch + 1))
 
             if self.take_snapshot:
                 torch.save({

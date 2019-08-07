@@ -9,9 +9,10 @@ from process.augmentation import *
 from metric import *
 from loss.cyclic_lr import CosineAnnealingLR_with_Restart
 import time
+import re
 
 
-def get_model(model_name, num_class,is_first_bn):
+def get_model(model_name, num_class, is_first_bn) -> nn.Module:
     if model_name == 'baseline':
         from model.model_baseline import Net
     elif model_name == 'model_A':
@@ -47,14 +48,20 @@ def get_n_params(model):
 
 
 def run_train(config):
+    # TODO: add random seed
+    torch.manual_seed(42)
+    np.random.seed(42)
+
     # figuring out the path (dependant of model (A, B, C), image mode (color, ir, depth), image size (32, 48...))
     out_dir = './models'
     config.model_name = config.model + '_' + config.image_mode + '_' + str(config.image_size)
     out_dir = os.path.join(out_dir,config.model_name)
 
+    EXP_TABS = 40
+
+    # device = "cuda"
 
     initial_checkpoint = config.pretrained_model
-
 
     criterion  = softmax_cross_entropy_criterion
 
@@ -68,15 +75,16 @@ def run_train(config):
 
     # verbose output into txt file (configuration etc.)
     log = Logger()
-    log.open(os.path.join(out_dir,config.model_name+'.txt'), mode='a')
-    log.write('\tout_dir      = %s\n' % out_dir)
-    log.write('\n')
-    log.write('\t<additional comments>\n')
-    log.write('\t  ... xxx baseline  ... \n')
-    log.write('\n')
+    log.open(os.path.join(out_dir, config.model_name+'.txt'), mode='a')
+    log.write('config:\n')
+    log.write('out_dir:\t"{}"\n'.format(os.path.abspath(out_dir)).expandtabs(EXP_TABS))
+
+
+    for arg in vars(config):
+        log.write("{}:\t{}\n".format(arg, getattr(config, arg)).expandtabs(EXP_TABS))
 
     ## dataset ----------------------------------------
-    log.write('** dataset setting **\n')
+    log.write('\ndataset setting:\n')
 
     # this is now a function (without parameters being passed yet..)
     augment = get_augment(config.image_mode)
@@ -93,7 +101,7 @@ def run_train(config):
 
     # custom object (not torch inherited)
     # important to have __setattr__, __iter__, __len__
-    train_loader  = DataLoader(train_dataset,
+    train_loader = DataLoader(train_dataset,
                                 shuffle=True,
                                 batch_size  = config.train_batch_size,
                                 drop_last   = True,
@@ -114,47 +122,43 @@ def run_train(config):
                                num_workers = config.dataset_workers)
 
     assert(len(train_dataset)>=config.train_batch_size)
-    log.write('train_batch_size = %d\n'%(config.train_batch_size))
-    log.write('valid_batch_size = %d\n' % (config.valid_batch_size))
-    log.write('train_dataset : \n%s\n'%(train_dataset))
-    log.write('valid_dataset : \n%s\n'%(valid_dataset))
-    log.write('\n')
-    log.write('** net setting **\n')
+    log.write('train_batch_size:\t{}\n'.format(config.train_batch_size).expandtabs(EXP_TABS))
+    log.write('valid_batch_size:\t{}\n'.format(config.valid_batch_size).expandtabs(EXP_TABS))
+    # log.write('train_dataset : \n{}\n'%(train_dataset))
+    # log.write('valid_dataset : \n%s\n'%(valid_dataset))
+    # log.write('\n')
+    log.write('\nneural net:\n')
 
     net = get_model(model_name=config.model, num_class=2, is_first_bn=True)
 
-    print(net)
+    log.write("number of params:\t{}\n".format(get_n_params(net)).expandtabs(EXP_TABS))
+    # print(net)
 
     net = torch.nn.DataParallel(net)
 
     net = net.cuda() if torch.cuda.is_available() else net.cpu()
+    # net = net.
 
     if initial_checkpoint is not None:
         initial_checkpoint = os.path.join(out_dir +'/checkpoint',initial_checkpoint)
         print('\tinitial_checkpoint = %s\n' % initial_checkpoint)
         net.load_state_dict(torch.load(initial_checkpoint, map_location=lambda storage, loc: storage))
 
-    log.write('%s\n'%(type(net)))
-    log.write('criterion=%s\n'%criterion)
+    log.write('{}\n'.format(type(net)))
+    log.write('criterion:\t{}\n'.format(criterion).expandtabs(EXP_TABS))
     log.write('\n')
 
     iter_smooth = 20
     start_iter = 0
     log.write('\n')
 
-    print(get_n_params(net))
-
-    ## start training here! ##############################################
-    log.write('** start training here! **\n')
-    log.write('                                  |------------ VALID -------------|-------- TRAIN/BATCH ----------|         \n')
-    log.write('model_name   lr   iter  epoch     |     loss      acer      acc    |     loss              acc     |  time   \n')
-    log.write('----------------------------------------------------------------------------------------------------\n')
+    # print(get_n_params(net))
 
     iter = 0
     i = 0
 
     train_loss = np.zeros(6, np.float32)
-    valid_loss = np.zeros(6, np.float32)
+    valid_metrics = np.zeros(6, np.float32)
     batch_loss = np.zeros(6, np.float32)
 
     start = timer()
@@ -171,103 +175,119 @@ def run_train(config):
                                           eta_min=1e-3)
 
     global_min_acer = 1.0
-    for cycle_index in range(config.cycle_num):
-        print('restart index: ' + str(cycle_index))
+    for restart_index in range(config.epochs_valid_start):
+        log.write('\n' + ('#'*50) + '\n')
+        log.write('restart index: ' + str(restart_index) + "\n")
         min_acer = 1.0
 
-        for epoch in range(0, config.epochs):
+        for epoch in range(config.epochs):
             sgdr.step()
             lr = optimizer.param_groups[0]['lr']
-            print()
-            print('lr : {:.4f}'.format(lr))
 
-            tm1 = time.time()
+            if epoch == 0:
+                log.write('start learning rate : {:.4f}\n'.format(lr))
+
+            # tm1 = time.time()
 
             sum_train_loss = np.zeros(6,np.float32)
-            sum = 0
+            # sum_ = 0
             optimizer.zero_grad()
 
-            for input, truth in train_loader:
+            start_batch = timer()
+
+            batch_losses = []
+            batch_accs = []
+            batch_count = 0
+            for inpt, truth in train_loader:
+                batch_count += 1
                 iter = i + start_iter
 
                 # one iteration update  -------------
                 net.train()
-                input = input.cuda() if torch.cuda.is_available() else input.cpu()
+                inpt = inpt.cuda() if torch.cuda.is_available() else inpt.cpu()
                 truth = truth.cuda() if torch.cuda.is_available() else truth.cpu()
 
-                logit,_,_ = net.forward(input)
-
-                # input_img = input.detach().numpy()
-                #
-                # for img in input_img:
-                #     r, g, b = img
-                #     cv2.imshow('R kanal', img[0])
-                #     k = chr(cv2.waitKey())
-                #
-                # cv2.destroyAllWindows()
+                logit, _, _ = net.forward(inpt)
 
                 truth = truth.view(logit.shape[0])
 
-                loss  = criterion(logit, truth)
-                precision,_ = metric(logit, truth)
+                loss = criterion(logit, truth)
+                precision, _ = metric(logit, truth)
 
                 loss.backward()
                 optimizer.step()
                 optimizer.zero_grad()
 
                 # print statistics  ------------
-                batch_loss[:2] = np.array(( loss.item(), precision.item(),))
+                batch_loss[:2] = np.array([loss.item(), precision.item(), ])
+                batch_losses.append(batch_loss[0])
+                batch_accs.append(batch_loss[1])
 
-                sum += 1
-                if iter%iter_smooth == 0:
-                    train_loss = sum_train_loss/sum
-                    sum = 0
-                i=i+1
+            # train stats
+            batch_losses = sum(batch_losses)/len(batch_losses)
+            batch_accs = sum(batch_accs)/len(batch_accs)
+            now = timer()
+            print()
+            log.write(
+                ('[train] {} | rst: {} | ep: {} | lrn_rate: {:.4f} | loss: {:.3f} | acc: {:.4f} | epoch_tm: {} ' +
+                 '| avg_batch_tm: {} | time: {}\n').format(config.model_name, restart_index, epoch + 1, lr,
+                                      batch_losses, batch_accs,
+                                      time_to_str(now - start_batch, 'sec'),
+                                      time_to_str((now - start_batch) / batch_count, 'sec'),
+                                      time_to_str(now - start), 'sec'))
 
-            tm2 = time.time() - tm1
-            print("batch fwd+bwd pass time: {:.2f} seconds".format(tm2))
-
-            # if epoch >= config.epochs // 2:
+            # validation
             if epoch >= config.epochs_valid_start:
+                # set mode to evaluation TODO: check documentation
                 net.eval()
 
-                t1 = time.time()
-                valid_loss,_ = do_valid_test(net, valid_loader, criterion)
-                t2 = time.time()  - t1
-                print("validation time: {:.2f} seconds".format(t2))
+                valid_time = timer()
+                valid_metrics,_ = do_valid_test(net, valid_loader, criterion, logger=log)
+                valid_loss, valid_acer, valid_acc, valid_correct, valid_tpr, valid_fpr = valid_metrics[0:6]
 
+                # print(valid_loss,)
+                # print("valid_loss: {} valid_acer: {} valid_acc: {} valid_correct: {}".format(
+                #     valid_loss, valid_acer, valid_acc, valid_correct))
+
+                valid_time = timer() - valid_time
+                now = timer() - start
+                # TODO: back to tran mode
                 net.train()
 
-                if valid_loss[1] < min_acer and epoch > 0:
-                    min_acer = valid_loss[1]
-                    ckpt_name = out_dir + '/checkpoint/Cycle_' + str(cycle_index) + '_min_acer_model.pth'
-                    torch.save(net.state_dict(), ckpt_name)
-                    log.write('save cycle ' + str(cycle_index) + ' min acer model: ' + str(min_acer) + '\n')
 
-                if valid_loss[1] < global_min_acer and epoch > 0:
-                    global_min_acer = valid_loss[1]
-                    ckpt_name = out_dir + '/checkpoint/global_min_acer_model.pth'
-                    torch.save(net.state_dict(), ckpt_name)
-                    log.write('save global min acer model: ' + str(min_acer) + '\n')
-
-            asterisk = ' '
-
-            if epoch >= config.epochs_valid_start:
-                log.write(config.model_name+' Cycle %d: %0.4f %5.1f %d | %0.6f  %0.6f  %0.3f %s  | %0.6f  %0.6f |%s \n' % (
-                    cycle_index, lr, iter, epoch,
-                    valid_loss[0], valid_loss[1], valid_loss[2], asterisk,
-                    batch_loss[0], batch_loss[1],
-                    time_to_str((timer() - start), 'min')))
-            else:
+                # eval output
                 log.write(
-                    config.model_name + ' Cycle %d: %0.4f %5.1f %d | %0.6f  %0.6f |%s \n' % (
-                        cycle_index, lr, iter, epoch,
-                        batch_loss[0], batch_loss[1],
-                        time_to_str((timer() - start), 'min')))
+                    ('[valid] loss: {:.3f} | acc: {:.4f} | ' +
+                     'acer: {:.3f} | tpr: {:.3f} | fpr: {:.3f} | valid_time: {} | ' +
+                     'time: {}\n').format(valid_loss, valid_acc, valid_acer, valid_tpr, valid_fpr,
+                                          time_to_str(valid_time, 'sec'), time_to_str(now, 'min')))
 
-        ckpt_name = out_dir + '/checkpoint/Cycle_' + str(cycle_index) + '_final_model.pth'
-        torch.save(net.state_dict(), ckpt_name)
-        log.write('save cycle ' + str(cycle_index) + ' final model \n')
+                checkpoint = False
+                if (valid_acer < min_acer) or (valid_acer < global_min_acer) and epoch > 0:
+                    log.write('[checkpoint] ')
+                    checkpoint = True
+
+                # this cycle best
+                if valid_acer < min_acer and epoch > 0:
+                    min_acer = valid_acer
+                    checkpoint_name = out_dir + '/checkpoint/restart_' + str(restart_index).zfill(3) + '_min_acer_model.pth'
+                    torch.save(net.state_dict(), checkpoint_name)
+                    log.write('save restart ' + str(restart_index) + ' min acer model: ' + str(min_acer) + " | ")
+
+                # global best
+                if valid_acer < global_min_acer and epoch > 0:
+                    global_min_acer = valid_acer
+                    checkpoint_name = out_dir + '/checkpoint/global_min_acer_model.pth'
+                    torch.save(net.state_dict(), checkpoint_name)
+                    log.write('save global min acer model: ' + str(min_acer).zfill(3))
+
+                if checkpoint and not epoch == config.epochs - 1:
+                    now = timer()
+                    log.write("| time: {}\n".format(time_to_str(now - start)))
+
+        checkpoint_name = out_dir + '/checkpoint/restart_' + str(restart_index).zfill(3) + '_final_model.pth'
+        torch.save(net.state_dict(), checkpoint_name)
+        log.write('[checkpoint!] save restart ' + str(restart_index) + ' final model \n')
 
 
 def run_realtime(config, dir):
@@ -332,6 +352,9 @@ def run_realtime(config, dir):
 
 # test (inference)
 def run_test(config, dir):
+
+    device = "cpu"
+
     out_dir = './models'
     config.model_name = config.model + '_' + config.image_mode + '_' + str(config.image_size)
     out_dir = os.path.join(out_dir,config.model_name)
@@ -340,12 +363,16 @@ def run_test(config, dir):
 
     # net ---------------------------------------
     net = get_model(model_name=config.model, num_class=2, is_first_bn=True)
+
+    # TODO: only if multiple GPUs
     net = torch.nn.DataParallel(net)
+
+    net.to(device)
 
     if initial_checkpoint is not None:
         save_dir = os.path.join(out_dir + '/checkpoint', dir, initial_checkpoint)
-        initial_checkpoint = os.path.join(out_dir +'/checkpoint',initial_checkpoint)
-        print('\tinitial_checkpoint = %s\n' % initial_checkpoint)
+        initial_checkpoint = os.path.join(out_dir + '/checkpoint',initial_checkpoint)
+        print('\t' + 'initial_checkpoint = {}\n'.format(initial_checkpoint))
         net.load_state_dict(torch.load(initial_checkpoint, map_location=lambda storage, loc: storage))
         if not os.path.exists(os.path.join(out_dir + '/checkpoint', dir)):
             os.makedirs(os.path.join(out_dir + '/checkpoint', dir))
@@ -353,11 +380,14 @@ def run_test(config, dir):
     test_dataset = FDDataset(mode='test', modality=config.image_mode,image_size=config.image_size,
                              fold_index=config.train_fold_index,augment=augment, dataset_path=config.test_list)
 
+    print("test batch size: {}".format(config.test_batch_size if config.test_batch_size > 1
+                                        else str(config.test_batch_size) + " (realtime)"))
+
     test_loader = DataLoader(test_dataset,
                              shuffle=False,
                              batch_size=config.test_batch_size,
                              drop_last=False,
-                             num_workers=8)
+                             num_workers=4)
 
     ins = []
 
@@ -373,8 +403,12 @@ def run_test(config, dir):
             # print(line)
 
     net.eval()
+
+    start_time = time.time()
     out = infer_test(net, test_loader)
-    print()
+    time_delta = time.time() - start_time
+    print("testing took {:.2f} seconds".format(time_delta))
+
     print("percentage predicted true:", 100*np.mean(out > 0.5))
     print("raw percentages:")
 
@@ -387,9 +421,9 @@ def run_test(config, dir):
         # print(filename, label, out, sep="\t")
         summary.append([filename, label, out])
 
-    summary = sorted(summary, key=lambda f: f[2], reverse=True)
-    for f, l, o in summary:
-        print(f, l, o)
+    # summary = sorted(summary, key=lambda f: f[2], reverse=True)
+    # for f, l, o in summary:
+    #     print(f, l, o)
 
     # print(np.array(out) * 100)
     print('done')
@@ -434,7 +468,7 @@ if __name__ == '__main__':
     parser.add_argument('--train_batch_size', type=int, default=128)
     parser.add_argument('--valid_batch_size', type=int, default=128)
     parser.add_argument('--test_batch_size', type=int, default=20)
-    parser.add_argument('--cycle_num', type=int, default=10)
+    # parser.add_argument('--cycle_num', type=int, default=10)
     parser.add_argument('--epochs', type=int, default=50)
     parser.add_argument('--epochs_valid_start', type=int, default=50)  # number of random restarts
 
@@ -457,7 +491,7 @@ if __name__ == '__main__':
 
     config = parser.parse_args()
 
-    print(config)
+    # print(config)
     # print(config.dataset_path)
 
     main(config)
