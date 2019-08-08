@@ -41,7 +41,7 @@ class Net(nn.Module):
     def forward(self, x):
         batch_size, C, H, W = x.shape
 
-        if self.is_first_bn:
+        if self.is_first_bn and False:
             x = self.first_bn(x)
         else:
             mean=[0.485, 0.456, 0.406] #rgb
