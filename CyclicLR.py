@@ -1,7 +1,4 @@
-import os
-# os.environ['CUDA_VISIBLE_DEVICES'] =  '4,5,6,7' #'3,2,1,0'
 import sys
-import torch.nn as nn
 sys.path.append("..")
 import argparse
 from process.data import *
@@ -9,7 +6,6 @@ from process.augmentation import *
 from metric import *
 from loss.cyclic_lr import CosineAnnealingLR_with_Restart
 import time
-import re
 
 
 def get_model(model_name, num_class, is_first_bn) -> nn.Module:
@@ -49,8 +45,10 @@ def get_n_params(model):
 
 def run_train(config):
     # TODO: add random seed
-    torch.manual_seed(42)
-    np.random.seed(42)
+    torch.manual_seed(0)
+    np.random.seed(0)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
     # figuring out the path (dependant of model (A, B, C), image mode (color, ir, depth), image size (32, 48...))
     out_dir = './models'
@@ -79,7 +77,6 @@ def run_train(config):
     log.write('config:\n')
     log.write('out_dir:\t"{}"\n'.format(os.path.abspath(out_dir)).expandtabs(EXP_TABS))
 
-
     for arg in vars(config):
         log.write("{}:\t{}\n".format(arg, getattr(config, arg)).expandtabs(EXP_TABS))
 
@@ -96,30 +93,30 @@ def run_train(config):
     # inherits Dataset (torch)
     # rotate, scale, augument images
     # fold index ne sluzi nicemu, zasad...
-    train_dataset = FDDataset(mode = 'train', modality=config.image_mode,image_size=config.image_size,
-                              fold_index=config.train_fold_index,augment=augment, dataset_path=config.train_list)
+    train_dataset = FDDataset(mode='train', modality=config.image_mode, image_size=config.image_size,
+                              fold_index=config.train_fold_index, augment=augment, dataset_path=config.train_list)
 
     # custom object (not torch inherited)
     # important to have __setattr__, __iter__, __len__
     train_loader = DataLoader(train_dataset,
                                 shuffle=True,
-                                batch_size  = config.train_batch_size,
-                                drop_last   = True,
-                                num_workers = 4)
+                                batch_size=config.train_batch_size,
+                                drop_last=True,
+                                num_workers=config.dataset_workers)
 
     ######################
     # Validation ########
     ######################
 
-    valid_dataset = FDDataset(mode = 'val', modality=config.image_mode,image_size=config.image_size,
-                              fold_index=config.train_fold_index,augment=augment, dataset_path=config.validation_list)
+    valid_dataset = FDDataset(mode='val', modality=config.image_mode,image_size=config.image_size,
+                              fold_index=config.train_fold_index, augment=augment, dataset_path=config.validation_list)
 
     #TODO: parameters? autotune?
     valid_loader  = DataLoader(valid_dataset,
                                shuffle=False,
-                               batch_size = max(1, config.valid_batch_size // 36),
-                               drop_last  = False,
-                               num_workers = config.dataset_workers)
+                               batch_size=max(1, config.valid_batch_size // 36),
+                               drop_last=False,
+                               num_workers=config.dataset_workers)
 
     assert(len(train_dataset)>=config.train_batch_size)
     log.write('train_batch_size:\t{}\n'.format(config.train_batch_size).expandtabs(EXP_TABS))
@@ -484,7 +481,7 @@ if __name__ == '__main__':
     parser.add_argument('--device', type=str, choices=["auto", "gpu", "cpu"], default="auto")
 
     # TODO: implement
-    parser.add_argument('--test-sample', type=str, default=None)
+    # parser.add_argument('--test-sample', type=str, default=None)
     parser.add_argument('--train_list', type=str, default=None)
     parser.add_argument('--validation_list', type=str, default=None)
     parser.add_argument('--test_list', type=str, default=None)

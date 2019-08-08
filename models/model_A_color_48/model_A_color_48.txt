@@ -3121,3 +3121,388 @@ start learning rate : 0.0976
 [valid] loss: 0.800 | acc: 0.6125 | acer: 0.409 | tpr: 0.461 | fpr: 0.279 | valid_time:  0 min 25 sec | time:  0 hr 02 min
 [checkpoint] save restart 0 min acer model: 0.4089460563850839 | save global min acer model: 0.4089460563850839| time:  0 hr 02 min
 [train] model_A_color_48 | rst: 0 | ep: 7 | lrn_rate: 0.0214 | loss: 0.480 | acc: 0.7868 | epoch_tm:  0 min 05 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+config:
+out_dir:                                "/home/loki/Projects/poso/antispoofing/models/model_A_color_48"
+train_fold_index:                       -1
+model:                                  model_A
+image_mode:                             color
+image_size:                             48
+train_batch_size:                       128
+valid_batch_size:                       128
+test_batch_size:                        20
+epochs:                                 10
+epochs_valid_start:                     2
+mode:                                   train
+stream:                                 None
+pretrained_model:                       None
+dataset_workers:                        4
+device:                                 auto
+test_sample:                            None
+train_list:                             /home/loki/Desktop/spoofing/Datasetovi/combined_new/train_reduced.txt
+validation_list:                        /home/loki/Desktop/spoofing/Datasetovi/combined_new/test_reduced.txt
+test_list:                              None
+model_name:                             model_A_color_48
+
+dataset setting:
+train_batch_size:                       128
+valid_batch_size:                       128
+
+neural net:
+number of params:                       17409084
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion:                              <function softmax_cross_entropy_criterion at 0x7f6618f9f620>
+
+
+
+##################################################
+restart index: 0
+start learning rate : 0.0976
+[train] model_A_color_48 | rst: 0 | ep: 1 | lrn_rate: 0.0976 | loss: 1.110 | acc: 0.6328 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 2 | lrn_rate: 0.0905 | loss: 0.906 | acc: 0.7020 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 3 | lrn_rate: 0.0796 | loss: 1.371 | acc: 0.7366 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+config:
+out_dir:                                "/home/loki/Projects/poso/antispoofing/models/model_A_color_48"
+train_fold_index:                       -1
+model:                                  model_A
+image_mode:                             color
+image_size:                             48
+train_batch_size:                       128
+valid_batch_size:                       128
+test_batch_size:                        20
+epochs:                                 10
+epochs_valid_start:                     2
+mode:                                   train
+stream:                                 None
+pretrained_model:                       None
+dataset_workers:                        4
+device:                                 auto
+test_sample:                            None
+train_list:                             /home/loki/Desktop/spoofing/Datasetovi/combined_new/train_reduced.txt
+validation_list:                        /home/loki/Desktop/spoofing/Datasetovi/combined_new/test_reduced.txt
+test_list:                              None
+model_name:                             model_A_color_48
+
+dataset setting:
+train_batch_size:                       128
+valid_batch_size:                       128
+
+neural net:
+number of params:                       17409084
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion:                              <function softmax_cross_entropy_criterion at 0x7f98411d4620>
+
+
+
+##################################################
+restart index: 0
+start learning rate : 0.0976
+[train] model_A_color_48 | rst: 0 | ep: 1 | lrn_rate: 0.0976 | loss: 1.195 | acc: 0.6250 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 2 | lrn_rate: 0.0905 | loss: 1.324 | acc: 0.7176 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 3 | lrn_rate: 0.0796 | loss: 1.317 | acc: 0.6027 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[valid] loss: 39.041 | acc: 0.4425 | acer: 0.484 | tpr: 0.958 | fpr: 0.927 | valid_time:  0 min 25 sec | time:  0 hr 00 min
+[checkpoint] save restart 0 min acer model: 0.48447739713705634 | save global min acer model: 0.48447739713705634| time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 4 | lrn_rate: 0.0658 | loss: 0.665 | acc: 0.7031 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[valid] loss: 3.194 | acc: 0.6425 | acer: 0.331 | tpr: 0.826 | fpr: 0.489 | valid_time:  0 min 25 sec | time:  0 hr 01 min
+[checkpoint] save restart 0 min acer model: 0.33146154043843645 | save global min acer model: 0.33146154043843645| time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 5 | lrn_rate: 0.0505 | loss: 0.591 | acc: 0.7221 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 01 min
+config:
+out_dir:                                "/home/loki/Projects/poso/antispoofing/models/model_A_color_48"
+train_fold_index:                       -1
+model:                                  model_A
+image_mode:                             color
+image_size:                             48
+train_batch_size:                       128
+valid_batch_size:                       128
+test_batch_size:                        20
+epochs:                                 10
+epochs_valid_start:                     2
+mode:                                   train
+stream:                                 None
+pretrained_model:                       None
+dataset_workers:                        4
+device:                                 auto
+test_sample:                            None
+train_list:                             /home/loki/Desktop/spoofing/Datasetovi/combined_new/train_reduced.txt
+validation_list:                        /home/loki/Desktop/spoofing/Datasetovi/combined_new/test_reduced.txt
+test_list:                              None
+model_name:                             model_A_color_48
+
+dataset setting:
+train_batch_size:                       128
+valid_batch_size:                       128
+
+neural net:
+number of params:                       17409084
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion:                              <function softmax_cross_entropy_criterion at 0x7f1dbb54a620>
+
+
+
+##################################################
+restart index: 0
+start learning rate : 0.0976
+[train] model_A_color_48 | rst: 0 | ep: 1 | lrn_rate: 0.0976 | loss: 0.999 | acc: 0.6261 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+config:
+out_dir:                                "/home/loki/Projects/poso/antispoofing/models/model_A_color_48"
+train_fold_index:                       -1
+model:                                  model_A
+image_mode:                             color
+image_size:                             48
+train_batch_size:                       128
+valid_batch_size:                       128
+test_batch_size:                        20
+epochs:                                 10
+epochs_valid_start:                     2
+mode:                                   train
+stream:                                 None
+pretrained_model:                       None
+dataset_workers:                        4
+device:                                 auto
+test_sample:                            None
+train_list:                             /home/loki/Desktop/spoofing/Datasetovi/combined_new/train_reduced.txt
+validation_list:                        /home/loki/Desktop/spoofing/Datasetovi/combined_new/test_reduced.txt
+test_list:                              None
+model_name:                             model_A_color_48
+
+dataset setting:
+train_batch_size:                       128
+valid_batch_size:                       128
+
+neural net:
+number of params:                       17409084
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion:                              <function softmax_cross_entropy_criterion at 0x7f57841fd620>
+
+
+
+##################################################
+restart index: 0
+start learning rate : 0.0976
+[train] model_A_color_48 | rst: 0 | ep: 1 | lrn_rate: 0.0976 | loss: 1.070 | acc: 0.6384 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 2 | lrn_rate: 0.0905 | loss: 0.645 | acc: 0.7355 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 3 | lrn_rate: 0.0796 | loss: 1.109 | acc: 0.7065 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[valid] loss: 1.314 | acc: 0.5625 | acer: 0.398 | tpr: 0.838 | fpr: 0.635 | valid_time:  0 min 22 sec | time:  0 hr 00 min
+[checkpoint] save restart 0 min acer model: 0.39843488987689857 | save global min acer model: 0.39843488987689857| time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 4 | lrn_rate: 0.0658 | loss: 0.886 | acc: 0.7712 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[valid] loss: 16.073 | acc: 0.5350 | acer: 0.421 | tpr: 0.844 | fpr: 0.687 | valid_time:  0 min 22 sec | time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 5 | lrn_rate: 0.0505 | loss: 0.792 | acc: 0.7165 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 01 min
+[valid] loss: 7.240 | acc: 0.5900 | acer: 0.380 | tpr: 0.802 | fpr: 0.562 | valid_time:  0 min 22 sec | time:  0 hr 01 min
+[checkpoint] save restart 0 min acer model: 0.37991827503790704 | save global min acer model: 0.37991827503790704| time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 6 | lrn_rate: 0.0352 | loss: 0.590 | acc: 0.7388 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 01 min
+[valid] loss: 2.998 | acc: 0.6375 | acer: 0.345 | tpr: 0.760 | fpr: 0.451 | valid_time:  0 min 22 sec | time:  0 hr 01 min
+[checkpoint] save restart 0 min acer model: 0.34508236745393334 | save global min acer model: 0.34508236745393334| time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 7 | lrn_rate: 0.0214 | loss: 0.467 | acc: 0.7857 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+[valid] loss: 0.865 | acc: 0.6925 | acer: 0.290 | tpr: 0.814 | fpr: 0.395 | valid_time:  0 min 22 sec | time:  0 hr 02 min
+[checkpoint] save restart 0 min acer model: 0.2902392639613477 | save global min acer model: 0.2902392639613477| time:  0 hr 02 min
+[train] model_A_color_48 | rst: 0 | ep: 8 | lrn_rate: 0.0105 | loss: 0.419 | acc: 0.8259 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+[valid] loss: 0.529 | acc: 0.7550 | acer: 0.243 | tpr: 0.772 | fpr: 0.258 | valid_time:  0 min 22 sec | time:  0 hr 02 min
+[checkpoint] save restart 0 min acer model: 0.2425278198966873 | save global min acer model: 0.2425278198966873| time:  0 hr 02 min
+[train] model_A_color_48 | rst: 0 | ep: 9 | lrn_rate: 0.0034 | loss: 0.452 | acc: 0.7913 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+[valid] loss: 0.520 | acc: 0.7625 | acer: 0.236 | tpr: 0.772 | fpr: 0.245 | valid_time:  0 min 22 sec | time:  0 hr 03 min
+[checkpoint] save restart 0 min acer model: 0.23609005165634395 | save global min acer model: 0.23609005165634395| time:  0 hr 03 min
+[train] model_A_color_48 | rst: 0 | ep: 10 | lrn_rate: 0.0010 | loss: 0.451 | acc: 0.8136 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[valid] loss: 0.584 | acc: 0.7550 | acer: 0.241 | tpr: 0.784 | fpr: 0.266 | valid_time:  0 min 22 sec | time:  0 hr 03 min
+[checkpoint!] save restart 0 final model 
+
+##################################################
+restart index: 1
+start learning rate : 0.0976
+[train] model_A_color_48 | rst: 1 | ep: 1 | lrn_rate: 0.0976 | loss: 0.609 | acc: 0.7188 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[train] model_A_color_48 | rst: 1 | ep: 2 | lrn_rate: 0.0905 | loss: 0.572 | acc: 0.7511 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[train] model_A_color_48 | rst: 1 | ep: 3 | lrn_rate: 0.0796 | loss: 0.442 | acc: 0.7868 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 04 min
+[valid] loss: 0.595 | acc: 0.6000 | acer: 0.471 | tpr: 0.096 | fpr: 0.039 | valid_time:  0 min 22 sec | time:  0 hr 04 min
+[checkpoint] save restart 1 min acer model: 0.4714091131042636 | | time:  0 hr 04 min
+[train] model_A_color_48 | rst: 1 | ep: 4 | lrn_rate: 0.0658 | loss: 0.420 | acc: 0.8013 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 04 min
+[valid] loss: 0.529 | acc: 0.7225 | acer: 0.319 | tpr: 0.431 | fpr: 0.069 | valid_time:  0 min 22 sec | time:  0 hr 04 min
+[checkpoint] save restart 1 min acer model: 0.31876590167304875 | | time:  0 hr 04 min
+[train] model_A_color_48 | rst: 1 | ep: 5 | lrn_rate: 0.0505 | loss: 0.499 | acc: 0.7768 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 04 min
+[valid] loss: 0.802 | acc: 0.6125 | acer: 0.454 | tpr: 0.144 | fpr: 0.052 | valid_time:  0 min 22 sec | time:  0 hr 05 min
+[train] model_A_color_48 | rst: 1 | ep: 6 | lrn_rate: 0.0352 | loss: 0.465 | acc: 0.8181 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 05 min
+[valid] loss: 0.398 | acc: 0.8300 | acer: 0.182 | tpr: 0.743 | fpr: 0.107 | valid_time:  0 min 22 sec | time:  0 hr 05 min
+[checkpoint] save restart 1 min acer model: 0.18239058363958777 | save global min acer model: 0.18239058363958777| time:  0 hr 05 min
+[train] model_A_color_48 | rst: 1 | ep: 7 | lrn_rate: 0.0214 | loss: 0.723 | acc: 0.7824 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 05 min
+[valid] loss: 4.348 | acc: 0.7675 | acer: 0.233 | tpr: 0.760 | fpr: 0.227 | valid_time:  0 min 22 sec | time:  0 hr 06 min
+[train] model_A_color_48 | rst: 1 | ep: 8 | lrn_rate: 0.0105 | loss: 0.700 | acc: 0.8013 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 06 min
+[valid] loss: 0.450 | acc: 0.7950 | acer: 0.215 | tpr: 0.725 | fpr: 0.155 | valid_time:  0 min 22 sec | time:  0 hr 06 min
+[train] model_A_color_48 | rst: 1 | ep: 9 | lrn_rate: 0.0034 | loss: 0.409 | acc: 0.8438 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 06 min
+[valid] loss: 0.516 | acc: 0.7525 | acer: 0.275 | tpr: 0.557 | fpr: 0.107 | valid_time:  0 min 22 sec | time:  0 hr 07 min
+[train] model_A_color_48 | rst: 1 | ep: 10 | lrn_rate: 0.0010 | loss: 0.421 | acc: 0.8192 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 07 min
+[valid] loss: 0.474 | acc: 0.8075 | acer: 0.201 | tpr: 0.749 | fpr: 0.150 | valid_time:  0 min 22 sec | time:  0 hr 07 min
+[checkpoint!] save restart 1 final model 
+config:
+out_dir:                                "/home/loki/Projects/poso/antispoofing/models/model_A_color_48"
+train_fold_index:                       -1
+model:                                  model_A
+image_mode:                             color
+image_size:                             48
+train_batch_size:                       128
+valid_batch_size:                       128
+test_batch_size:                        20
+epochs:                                 10
+epochs_valid_start:                     2
+mode:                                   train
+stream:                                 None
+pretrained_model:                       None
+dataset_workers:                        4
+device:                                 auto
+test_sample:                            None
+train_list:                             /home/loki/Desktop/spoofing/Datasetovi/combined_new/train_reduced.txt
+validation_list:                        /home/loki/Desktop/spoofing/Datasetovi/combined_new/test_reduced.txt
+test_list:                              None
+model_name:                             model_A_color_48
+
+dataset setting:
+train_batch_size:                       128
+valid_batch_size:                       128
+
+neural net:
+number of params:                       17409084
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion:                              <function softmax_cross_entropy_criterion at 0x7fa32a07d620>
+
+
+
+##################################################
+restart index: 0
+start learning rate : 0.0976
+[train] model_A_color_48 | rst: 0 | ep: 1 | lrn_rate: 0.0976 | loss: 1.776 | acc: 0.6027 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 2 | lrn_rate: 0.0905 | loss: 0.944 | acc: 0.6797 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 3 | lrn_rate: 0.0796 | loss: 0.936 | acc: 0.6908 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[valid] loss: 4.112 | acc: 0.5625 | acer: 0.399 | tpr: 0.832 | fpr: 0.631 | valid_time:  0 min 22 sec | time:  0 hr 00 min
+[checkpoint] save restart 0 min acer model: 0.39928297910616534 | save global min acer model: 0.39928297910616534| time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 4 | lrn_rate: 0.0658 | loss: 0.689 | acc: 0.6942 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[valid] loss: 1.497 | acc: 0.7050 | acer: 0.292 | tpr: 0.725 | fpr: 0.309 | valid_time:  0 min 22 sec | time:  0 hr 01 min
+[checkpoint] save restart 0 min acer model: 0.2922309886664439 | save global min acer model: 0.2922309886664439| time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 5 | lrn_rate: 0.0505 | loss: 0.643 | acc: 0.7299 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 01 min
+[valid] loss: 1.183 | acc: 0.6375 | acer: 0.331 | tpr: 0.862 | fpr: 0.524 | valid_time:  0 min 22 sec | time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 6 | lrn_rate: 0.0352 | loss: 0.514 | acc: 0.8036 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 01 min
+[valid] loss: 0.669 | acc: 0.6175 | acer: 0.458 | tpr: 0.084 | fpr: 0.000 | valid_time:  0 min 22 sec | time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 7 | lrn_rate: 0.0214 | loss: 0.549 | acc: 0.7790 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+[valid] loss: 0.568 | acc: 0.6425 | acer: 0.411 | tpr: 0.263 | fpr: 0.086 | valid_time:  0 min 22 sec | time:  0 hr 02 min
+[train] model_A_color_48 | rst: 0 | ep: 8 | lrn_rate: 0.0105 | loss: 0.473 | acc: 0.7857 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+[valid] loss: 0.481 | acc: 0.8300 | acer: 0.193 | tpr: 0.671 | fpr: 0.056 | valid_time:  0 min 22 sec | time:  0 hr 02 min
+[checkpoint] save restart 0 min acer model: 0.19256765439078924 | save global min acer model: 0.19256765439078924| time:  0 hr 02 min
+[train] model_A_color_48 | rst: 0 | ep: 9 | lrn_rate: 0.0034 | loss: 0.408 | acc: 0.8103 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+[valid] loss: 0.420 | acc: 0.8175 | acer: 0.188 | tpr: 0.778 | fpr: 0.155 | valid_time:  0 min 22 sec | time:  0 hr 03 min
+[checkpoint] save restart 0 min acer model: 0.18803166199789262 | save global min acer model: 0.18803166199789262| time:  0 hr 03 min
+[train] model_A_color_48 | rst: 0 | ep: 10 | lrn_rate: 0.0010 | loss: 0.465 | acc: 0.7980 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[valid] loss: 0.445 | acc: 0.8025 | acer: 0.199 | tpr: 0.790 | fpr: 0.189 | valid_time:  0 min 22 sec | time:  0 hr 03 min
+[checkpoint!] save restart 0 final model 
+
+##################################################
+restart index: 1
+start learning rate : 0.0976
+[train] model_A_color_48 | rst: 1 | ep: 1 | lrn_rate: 0.0976 | loss: 0.609 | acc: 0.7176 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[train] model_A_color_48 | rst: 1 | ep: 2 | lrn_rate: 0.0905 | loss: 0.545 | acc: 0.7734 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[train] model_A_color_48 | rst: 1 | ep: 3 | lrn_rate: 0.0796 | loss: 0.455 | acc: 0.7980 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[valid] loss: 0.825 | acc: 0.6150 | acer: 0.456 | tpr: 0.114 | fpr: 0.026 | valid_time:  0 min 22 sec | time:  0 hr 04 min
+[checkpoint] save restart 1 min acer model: 0.4559893089357765 | | time:  0 hr 04 min
+[train] model_A_color_48 | rst: 1 | ep: 4 | lrn_rate: 0.0658 | loss: 0.544 | acc: 0.8002 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 04 min
+[valid] loss: 16.862 | acc: 0.5775 | acer: 0.390 | tpr: 0.808 | fpr: 0.588 | valid_time:  0 min 22 sec | time:  0 hr 04 min
+[checkpoint] save restart 1 min acer model: 0.38979979954254584 | | time:  0 hr 04 min
+[train] model_A_color_48 | rst: 1 | ep: 5 | lrn_rate: 0.0505 | loss: 0.489 | acc: 0.7824 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 04 min
+[valid] loss: 1.397 | acc: 0.6275 | acer: 0.352 | tpr: 0.772 | fpr: 0.476 | valid_time:  0 min 22 sec | time:  0 hr 05 min
+[checkpoint] save restart 1 min acer model: 0.3519698799825242 | | time:  0 hr 05 min
+[train] model_A_color_48 | rst: 1 | ep: 6 | lrn_rate: 0.0352 | loss: 0.534 | acc: 0.8058 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 05 min
+[valid] loss: 0.785 | acc: 0.6650 | acer: 0.316 | tpr: 0.796 | fpr: 0.429 | valid_time:  0 min 22 sec | time:  0 hr 05 min
+[checkpoint] save restart 1 min acer model: 0.31638868186374036 | | time:  0 hr 05 min
+[train] model_A_color_48 | rst: 1 | ep: 7 | lrn_rate: 0.0214 | loss: 0.558 | acc: 0.8170 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 05 min
+[valid] loss: 0.517 | acc: 0.7450 | acer: 0.243 | tpr: 0.832 | fpr: 0.318 | valid_time:  0 min 22 sec | time:  0 hr 06 min
+[checkpoint] save restart 1 min acer model: 0.24263061859114388 | | time:  0 hr 06 min
+[train] model_A_color_48 | rst: 1 | ep: 8 | lrn_rate: 0.0105 | loss: 0.426 | acc: 0.8103 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 06 min
+[valid] loss: 0.513 | acc: 0.7475 | acer: 0.243 | tpr: 0.814 | fpr: 0.300 | valid_time:  0 min 22 sec | time:  0 hr 06 min
+[train] model_A_color_48 | rst: 1 | ep: 9 | lrn_rate: 0.0034 | loss: 0.449 | acc: 0.8237 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 06 min
+[valid] loss: 0.499 | acc: 0.7525 | acer: 0.240 | tpr: 0.808 | fpr: 0.288 | valid_time:  0 min 22 sec | time:  0 hr 07 min
+[checkpoint] save restart 1 min acer model: 0.2395852072678677 | | time:  0 hr 07 min
+[train] model_A_color_48 | rst: 1 | ep: 10 | lrn_rate: 0.0010 | loss: 0.610 | acc: 0.7913 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 07 min
+[valid] loss: 0.494 | acc: 0.7675 | acer: 0.229 | tpr: 0.790 | fpr: 0.249 | valid_time:  0 min 22 sec | time:  0 hr 07 min
+[checkpoint] save restart 1 min acer model: 0.22925393847498138 | [checkpoint!] save restart 1 final model 
+config:
+out_dir:                                "/home/loki/Projects/poso/antispoofing/models/model_A_color_48"
+train_fold_index:                       -1
+model:                                  model_A
+image_mode:                             color
+image_size:                             48
+train_batch_size:                       128
+valid_batch_size:                       128
+test_batch_size:                        20
+epochs:                                 10
+epochs_valid_start:                     2
+mode:                                   train
+stream:                                 None
+pretrained_model:                       None
+dataset_workers:                        4
+device:                                 auto
+test_sample:                            None
+train_list:                             /home/loki/Desktop/spoofing/Datasetovi/combined_new/train_reduced.txt
+validation_list:                        /home/loki/Desktop/spoofing/Datasetovi/combined_new/test_reduced.txt
+test_list:                              None
+model_name:                             model_A_color_48
+
+dataset setting:
+train_batch_size:                       128
+valid_batch_size:                       128
+
+neural net:
+number of params:                       17409084
+<class 'torch.nn.parallel.data_parallel.DataParallel'>
+criterion:                              <function softmax_cross_entropy_criterion at 0x7fbe37769840>
+
+
+
+##################################################
+restart index: 0
+start learning rate : 0.0976
+[train] model_A_color_48 | rst: 0 | ep: 1 | lrn_rate: 0.0976 | loss: 1.232 | acc: 0.6016 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 2 | lrn_rate: 0.0905 | loss: 1.531 | acc: 0.6362 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 3 | lrn_rate: 0.0796 | loss: 0.797 | acc: 0.6295 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[valid] loss: 6.937 | acc: 0.4400 | acer: 0.487 | tpr: 0.952 | fpr: 0.927 | valid_time:  0 min 22 sec | time:  0 hr 00 min
+[checkpoint] save restart 0 min acer model: 0.48747140911310427 | save global min acer model: 0.48747140911310427| time:  0 hr 00 min
+[train] model_A_color_48 | rst: 0 | ep: 4 | lrn_rate: 0.0658 | loss: 0.724 | acc: 0.6819 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 00 min
+[valid] loss: 5.778 | acc: 0.5625 | acer: 0.395 | tpr: 0.862 | fpr: 0.652 | valid_time:  0 min 22 sec | time:  0 hr 01 min
+[checkpoint] save restart 0 min acer model: 0.3950425329598314 | save global min acer model: 0.3950425329598314| time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 5 | lrn_rate: 0.0505 | loss: 0.746 | acc: 0.7299 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 01 min
+[valid] loss: 0.774 | acc: 0.6325 | acer: 0.335 | tpr: 0.862 | fpr: 0.532 | valid_time:  0 min 22 sec | time:  0 hr 01 min
+[checkpoint] save restart 0 min acer model: 0.33495669604996015 | save global min acer model: 0.33495669604996015| time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 6 | lrn_rate: 0.0352 | loss: 0.683 | acc: 0.7377 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 01 min
+[valid] loss: 0.496 | acc: 0.7875 | acer: 0.227 | tpr: 0.689 | fpr: 0.142 | valid_time:  0 min 22 sec | time:  0 hr 01 min
+[checkpoint] save restart 0 min acer model: 0.22650407339826784 | save global min acer model: 0.22650407339826784| time:  0 hr 01 min
+[train] model_A_color_48 | rst: 0 | ep: 7 | lrn_rate: 0.0214 | loss: 0.562 | acc: 0.7801 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+[valid] loss: 0.506 | acc: 0.7325 | acer: 0.258 | tpr: 0.796 | fpr: 0.313 | valid_time:  0 min 22 sec | time:  0 hr 02 min
+[train] model_A_color_48 | rst: 0 | ep: 8 | lrn_rate: 0.0105 | loss: 0.641 | acc: 0.7612 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+[valid] loss: 0.489 | acc: 0.7725 | acer: 0.227 | tpr: 0.778 | fpr: 0.232 | valid_time:  0 min 22 sec | time:  0 hr 02 min
+[train] model_A_color_48 | rst: 0 | ep: 9 | lrn_rate: 0.0034 | loss: 0.557 | acc: 0.7522 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 02 min
+[valid] loss: 0.459 | acc: 0.8000 | acer: 0.205 | tpr: 0.766 | fpr: 0.176 | valid_time:  0 min 22 sec | time:  0 hr 03 min
+[checkpoint] save restart 0 min acer model: 0.20474929968389402 | save global min acer model: 0.20474929968389402| time:  0 hr 03 min
+[train] model_A_color_48 | rst: 0 | ep: 10 | lrn_rate: 0.0010 | loss: 0.544 | acc: 0.7824 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[valid] loss: 0.456 | acc: 0.7925 | acer: 0.208 | tpr: 0.790 | fpr: 0.206 | valid_time:  0 min 22 sec | time:  0 hr 03 min
+[checkpoint!] save restart 0 final model 
+
+##################################################
+restart index: 1
+start learning rate : 0.0976
+[train] model_A_color_48 | rst: 1 | ep: 1 | lrn_rate: 0.0976 | loss: 0.634 | acc: 0.7433 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[train] model_A_color_48 | rst: 1 | ep: 2 | lrn_rate: 0.0905 | loss: 0.600 | acc: 0.7712 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 03 min
+[train] model_A_color_48 | rst: 1 | ep: 3 | lrn_rate: 0.0796 | loss: 0.643 | acc: 0.7812 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 04 min
+[valid] loss: 0.625 | acc: 0.6200 | acer: 0.347 | tpr: 0.856 | fpr: 0.549 | valid_time:  0 min 22 sec | time:  0 hr 04 min
+[checkpoint] save restart 1 min acer model: 0.34653439901313254 | | time:  0 hr 04 min
+[train] model_A_color_48 | rst: 1 | ep: 4 | lrn_rate: 0.0658 | loss: 0.618 | acc: 0.7667 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 04 min
+[valid] loss: 66.898 | acc: 0.5850 | acer: 0.381 | tpr: 0.826 | fpr: 0.588 | valid_time:  0 min 22 sec | time:  0 hr 04 min
+[train] model_A_color_48 | rst: 1 | ep: 5 | lrn_rate: 0.0505 | loss: 0.443 | acc: 0.7812 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 04 min
+[valid] loss: 28.667 | acc: 0.6400 | acer: 0.329 | tpr: 0.856 | fpr: 0.515 | valid_time:  0 min 22 sec | time:  0 hr 05 min
+[checkpoint] save restart 1 min acer model: 0.3293670170388836 | | time:  0 hr 05 min
+[train] model_A_color_48 | rst: 1 | ep: 6 | lrn_rate: 0.0352 | loss: 0.457 | acc: 0.7946 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 05 min
+[valid] loss: 6.578 | acc: 0.7325 | acer: 0.255 | tpr: 0.820 | fpr: 0.330 | valid_time:  0 min 22 sec | time:  0 hr 05 min
+[checkpoint] save restart 1 min acer model: 0.25505641078358304 | | time:  0 hr 05 min
+[train] model_A_color_48 | rst: 1 | ep: 7 | lrn_rate: 0.0214 | loss: 0.479 | acc: 0.7902 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 05 min
+[valid] loss: 3.039 | acc: 0.7450 | acer: 0.240 | tpr: 0.850 | fpr: 0.330 | valid_time:  0 min 22 sec | time:  0 hr 06 min
+[checkpoint] save restart 1 min acer model: 0.24008635090334352 | | time:  0 hr 06 min
+[train] model_A_color_48 | rst: 1 | ep: 8 | lrn_rate: 0.0105 | loss: 0.467 | acc: 0.7846 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 06 min
+[valid] loss: 0.870 | acc: 0.7725 | acer: 0.219 | tpr: 0.832 | fpr: 0.270 | valid_time:  0 min 22 sec | time:  0 hr 06 min
+[checkpoint] save restart 1 min acer model: 0.21902546837655162 | | time:  0 hr 06 min
+[train] model_A_color_48 | rst: 1 | ep: 9 | lrn_rate: 0.0034 | loss: 0.392 | acc: 0.8292 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 06 min
+[valid] loss: 0.484 | acc: 0.8000 | acer: 0.200 | tpr: 0.802 | fpr: 0.202 | valid_time:  0 min 22 sec | time:  0 hr 07 min
+[checkpoint] save restart 1 min acer model: 0.19966076430829327 | save global min acer model: 0.19966076430829327| time:  0 hr 07 min
+[train] model_A_color_48 | rst: 1 | ep: 10 | lrn_rate: 0.0010 | loss: 0.448 | acc: 0.8025 | epoch_tm:  0 min 04 sec | avg_batch_tm:  0 min 00 sec | time:  0 hr 07 min
+[valid] loss: 0.472 | acc: 0.8025 | acer: 0.198 | tpr: 0.802 | fpr: 0.197 | valid_time:  0 min 22 sec | time:  0 hr 07 min
+[checkpoint] save restart 1 min acer model: 0.19751484156151217 | save global min acer model: 0.19751484156151217[checkpoint!] save restart 1 final model 
