@@ -477,7 +477,7 @@ if __name__ == '__main__':
     parser.add_argument('--pretrained_model', type=str, default=None)
     # parser.add_argument('--dataset_path', type=str, default="/home/loki/Datasets/spoofing/NUAA/Detectedface52")
 
-    parser.add_argument('--dataset-workers', type=int, default=4)
+    parser.add_argument('--dataset_workers', type=int, default=4)
     parser.add_argument('--device', type=str, choices=["auto", "gpu", "cpu"], default="auto")
 
     # TODO: implement
