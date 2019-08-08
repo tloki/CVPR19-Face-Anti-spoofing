@@ -61,7 +61,14 @@ def to_var(x, volatile=False):
 # this one is used on train
 def softmax_cross_entropy_criterion(logit, truth, is_average=True):
     # loss = F.cross_entropy(logit, truth, reduce=is_average) # deprecated
-    loss = F.cross_entropy(logit, truth, reduction='elementwise_mean' if is_average else 'none')
+    loss = None
+    try:
+        loss = F.cross_entropy(logit, truth, reduction='mean' if is_average else 'none')
+    except:
+        print("old version of pytorch used")
+        loss = F.cross_entropy(logit, truth, reduction='elementwise_mean' if is_average else 'none')
+
+
     return loss
 
 
