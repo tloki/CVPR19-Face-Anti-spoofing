@@ -275,7 +275,7 @@ def color_augumentor(image, target_shape=(48, 48, 3), is_infer=False):
         # print(image.shape)
         image = augment_img.augment_image(image) # do upper augmentation
         image = random_resize(image) # with probability 50%, resize to 20-100% (uniform distrib)
-        image = random_cropping(image, target_shape, is_random=True) # randomly crop
+        image = random_cropping(image, target_shape, is_random=True)  # randomly crop
         # print(image.shape)
         return image
 

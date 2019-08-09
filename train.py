@@ -173,7 +173,7 @@ def run_train(config):
     # tqdm = dummy
 
     # Random restarts
-    for restart_index in range(config.epochs_valid_start):
+    for restart_index in range(config.num_restarts):
         log.write('\n' + ('#'*50) + '\n')
         log.write('restart index: ' + str(restart_index) + "\n")
         min_acer = 1.0

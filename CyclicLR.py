@@ -52,6 +52,8 @@ if __name__ == '__main__':
     parser.add_argument('--valid_batch_size', type=int, default=128)
     parser.add_argument('--test_batch_size', type=int, default=20)
     # parser.add_argument('--cycle_num', type=int, default=10)
+
+    parser.add_argument('--num_restarts', type=int, default=50)
     parser.add_argument('--epochs', type=int, default=50)
     parser.add_argument('--epochs_valid_start', type=int, default=50)  # number of random restarts
 
