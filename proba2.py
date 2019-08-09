@@ -9,11 +9,11 @@ import numpy as np
 from mtcnn.mtcnn import MTCNN
 from copy import deepcopy
 from FPSmeter import *
-from utils import hisEqulColor
+from utils import histogram_eq_color
 import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 import torch
-from process.augmentation import TTA_36_cropps, color_augumentor
+from preprocessing.augmentation import TTA_36_cropps, color_augumentor
 from metric import infer_test, infer_test_simple
 
 # TODO: use contants glbaly (including patch size of 48)
@@ -38,6 +38,7 @@ loaded_img = deepcopy(infer_img)
 infer_img = cv2.resize(infer_img, (RESIZE_SIZE, RESIZE_SIZE))
 
 infer_img = color_augumentor(infer_img, target_shape=(48, 48, 3), is_infer=True)
+
 n = len(infer_img)
 
 infer_img = np.concatenate(infer_img, axis=0)

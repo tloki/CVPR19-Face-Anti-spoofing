@@ -141,7 +141,7 @@ def do_valid(net, test_loader, criterion ):
     return valid_loss,[probs[:, 1], labels]
 
 
-def do_valid_test( net, test_loader, criterion, device="cpu", logger=dummy):
+def do_valid_test(net, validation_loader, criterion, device="cpu", logger=dummy):
     valid_num  = 0
     losses = []
     corrects = []
@@ -150,7 +150,9 @@ def do_valid_test( net, test_loader, criterion, device="cpu", logger=dummy):
 
     # for i, (input, truth) in enumerate(tqdm(test_loader)):
     # for input, truth in test_loader:
-    for i, (inpt, truth) in enumerate(test_loader):
+    for i, (inpt, truth) in tqdm(enumerate(validation_loader), desc="valid progress", total=len(validation_loader),
+                                 leave=False):
+    # for i, (inpt, truth) in enumerate(validation_loader):
         b, n, c, w, h = inpt.size()
         inpt = inpt.view(b*n, c, w, h)
 

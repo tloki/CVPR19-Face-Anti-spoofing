@@ -27,6 +27,7 @@ class Net(nn.Module):
         self.is_first_bn = is_first_bn
         if self.is_first_bn:
             self.first_bn = nn.BatchNorm2d(3)
+            # self.first_bn == nn.BatchNorm2d()
 
         self.encoder  = FaceBagNet_model_A(num_classes=1000)
         self.conv1 = self.encoder.layer0
@@ -41,11 +42,12 @@ class Net(nn.Module):
     def forward(self, x):
         batch_size, C, H, W = x.shape
 
-        if self.is_first_bn and False:
+        # if self.is_first_bn and False:
+        if self.is_first_bn:
             x = self.first_bn(x)
         else:
-            mean=[0.485, 0.456, 0.406] #rgb
-            std =[0.229, 0.224, 0.225]
+            mean = [0.485, 0.456, 0.406]  # rgb
+            std = [0.229, 0.224, 0.225]
 
             x = torch.cat([
                 (x[:,[0]]-mean[0])/std[0],
@@ -67,7 +69,7 @@ class Net(nn.Module):
         return logit, logit_id, fea
 
     def forward_res3(self, x):
-        batch_size,C,H,W = x.shape
+        batch_size, C, H, W = x.shape
 
         if self.is_first_bn:
             x = self.first_bn(x)

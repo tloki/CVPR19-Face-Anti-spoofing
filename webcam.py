@@ -9,11 +9,11 @@ import numpy as np
 from mtcnn.mtcnn import MTCNN
 from copy import deepcopy
 from FPSmeter import *
-from utils import hisEqulColor
+from utils import histogram_eq_color
 import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 import torch
-from process.augmentation import TTA_36_cropps, color_augumentor
+from preprocessing.augmentation import TTA_36_cropps, color_augumentor
 from metric import infer_test, infer_test_simple
 
 # TODO: use contants glbaly (including patch size of 48)
@@ -73,7 +73,7 @@ def main():
                 return
 
             frame2 = deepcopy(frame)
-            frame_hist_eq = hisEqulColor(frame2)
+            frame_hist_eq = histogram_eq_color(frame2)
 
             # frame =
 
