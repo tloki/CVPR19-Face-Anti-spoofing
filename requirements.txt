@@ -2,6 +2,6 @@ imgaug==0.2.6
 scikit-image==0.14.3
 scikit-learn==0.19.2
 tqdm==4.23.4
-torch==0.4.1
-torchvision==0.2.1
+torch==1.2.0
+torchvision
 opencv-contrib-python

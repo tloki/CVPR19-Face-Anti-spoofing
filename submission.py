@@ -1,6 +1,7 @@
 from metric import *
 from preprocessing.data_fusion import *
 
+
 def load_sub(sub):
     sub_dict = {}
     f = open(sub,'r')
@@ -14,6 +15,7 @@ def load_sub(sub):
 
     return sub_dict
 
+
 def ensemble_test_dir(sub_dir_list, save_name):
     dict_list = []
     for sub_dir in sub_dir_list:
@@ -24,7 +26,7 @@ def ensemble_test_dir(sub_dir_list, save_name):
     test_list = load_test_list()
 
     probs = []
-    for name,_,_ in test_list:
+    for name, _, _ in test_list:
         prob_tmp = 0.0
         for sub_dict in dict_list:
             prob_tmp += sub_dict[name] / (len(dict_list)*1.0)
@@ -32,6 +34,7 @@ def ensemble_test_dir(sub_dir_list, save_name):
 
     probs = np.asarray(probs)
     submission(probs,save_name, mode='test')
+
 
 def sub_first():
     dir = r'./models/'
@@ -46,6 +49,7 @@ def sub_first():
 
     ensemble_test_dir(dir_list, 'test_first.txt')
     print('test_first.txt done!')
+
 
 def sub_second():
     dir = r'./models/'
@@ -68,6 +72,7 @@ def sub_second():
 
     ensemble_test_dir(dir_list, 'test_second.txt')
     print('test_second.txt done!')
+
 
 if __name__ == '__main__':
     sub_first()  #TPR@FPR=10e-4 0.9971

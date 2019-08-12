@@ -125,7 +125,7 @@ class FDDataset(Dataset):
                     pt2 = bbox[0] + bbox[2], bbox[1] + int(bbox[3])
 
                     cv2.rectangle(frame, pt1, pt2, color=(0, 255, 0), thickness=2)
-                    cv2.putText(frame, "id: "+ str(i), (bbox[0] , bbox[1] - 5), cv2.FONT_HERSHEY_SIMPLEX,
+                    cv2.putText(frame, "id: "+ str(i), (bbox[0], bbox[1] - 5), cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale=1, color=(0, 0, 255), thickness=2)
 
                     # TODO: do not hardcode face index
@@ -134,8 +134,7 @@ class FDDataset(Dataset):
                         cv2.imshow("id: "+ str(i), crop_img)
         return crop_img
 
-
-    # get i-th item, except if balance param is set (if so, return random sample, ignoring the given index)
+    # get i-th item, except if balance param is set - in that case return random sample, ignoring the given index
     def __getitem__(self, index): # FDDataset_instance[index]
 
         image = None
@@ -191,7 +190,7 @@ class FDDataset(Dataset):
                 raise RuntimeError("unable to open image {}".format(img_path))
 
         if self.mode == 'realtime':
-            cv2.imshow("Face", image)
+            cv2.imshow("realtime spoof detection", image)
             print("size: ", image.shape, end="\t")
             image = self.augment(image, target_shape=(self.image_size, self.image_size, 3), is_infer=True)
             n = len(image)

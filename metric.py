@@ -242,57 +242,49 @@ def infer_test_simple( net, test_loader):
     valid_num = 0
     probs = []
 
-    for input, truth in test_loader:
+    for inpt, truth in test_loader:
         b, n, c, w, h = input.size()
-        # print(b, n, c, w, h)
-        input = input.view(b*n,c,w,h)
-        input = input.cuda() if torch.cuda.is_available() else input.cpu()
+        inpt = inpt.view(b*n, c, w, h)
+        inpt = inpt.cuda() if torch.cuda.is_available() else inpt.cpu()
 
         with torch.no_grad():
-            logit, _ , _ = net(input)
+            logit, _ , _ = net(inpt)
             logit = logit.view(b, n, 2)
             logit = torch.mean(logit, dim=1, keepdim=False)
             prob = F.softmax(logit, 1)
 
-        valid_num += len(input)
+        valid_num += len(inpt)
         probs.append(prob.data.cpu().numpy())
 
     probs = np.concatenate(probs)
     probs = probs[:, 1]
-
     return probs
 
 
-def infer_test_infinite( net, test_loader):
+def infer_test_infinite(net, test_loader):
     import cv2
     valid_num = 0
     probs = []
 
-    # tl = test_loader.__iter__()
-
     while True:
-        # for input, truth in test_loader:
-
         try:
-            input, truth = test_loader[0]
+            inpt, truth = test_loader[0]
         except:
             continue
 
-        inp = input.size()
+        inp = inpt.size()
         b, n, c, w, h = inp
-        # print(b, n, c, w, h)
-        input = input.view(b*n,c,w,h)
-        input = input.cuda() if torch.cuda.is_available() else input.cpu()
+        inpt = inpt.view(b*n, c, w, h)
+        inpt = inpt.cuda() if torch.cuda.is_available() else inpt.cpu()
 
-        # print("ok")
         with torch.no_grad():
-            logit, _ , _ = net(input)
+            logit, _, _ = net(inpt)
             logit = logit.view(b, n, 2)
             logit = torch.mean(logit, dim=1, keepdim=False)
             prob = F.softmax(logit, 1)
 
         is_real = list(prob.data.cpu().numpy()[:, 1])[0]
-        print((is_real>0.5)*"ok" + (is_real<0.5)*"FAKE", is_real)
+        print((is_real > 0.5)*"ok" + (is_real < 0.5)*"FAKE", is_real)
 
         valid_num += len(input)
         probs.append(prob.data.cpu().numpy())

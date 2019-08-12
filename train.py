@@ -296,14 +296,15 @@ def run_train(config):
                     checkpoint_name = out_dir + '/checkpoint/restart_' + \
                                       str(restart_index).zfill(3) + '_min_acer_model.pth'
                     torch.save(net.state_dict(), checkpoint_name)
-                    log.write('save restart ' + str(restart_index) + ' min acer model: ' + str(min_acer) + " | ")
+                    log.write('save restart {} min acer model: {} tpr:{:.5f} fpr:{:.5f} acc:{:.5f} loss:{:.5f} |'.format(
+                        restart_index, min_acer, valid_tpr, valid_fpr, valid_acc, valid_loss))
 
                 # global best
                 if valid_acer < global_min_acer and epoch > 0:
                     global_min_acer = valid_acer
                     checkpoint_name = out_dir + '/checkpoint/global_min_acer_model.pth'
                     torch.save(net.state_dict(), checkpoint_name)
-                    log.write('save global min acer model: ' + str(min_acer).zfill(3))
+                    log.write(' global min acer model !')
 
                 if checkpoint and not epoch == config.epochs - 1:
                     now = timer()

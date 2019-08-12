@@ -1,12 +1,9 @@
-import sys
-sys.path.append("..")
-import argparse
+from metric import *
+from mtcnn.mtcnn import MTCNN
 from preprocessing.data import *
 from preprocessing.augmentation import *
-from metric import *
-from loss.cyclic_lr import CosineAnnealingLR_with_Restart
-import time
-from utils import get_model, get_augment, get_n_params
+from utils import get_model, get_augment
+sys.path.append("..")
 
 
 def run_realtime(config, dir):
@@ -28,37 +25,13 @@ def run_realtime(config, dir):
         if not os.path.exists(os.path.join(out_dir + '/checkpoint', dir)):
             os.makedirs(os.path.join(out_dir + '/checkpoint', dir))
 
-    from mtcnn.mtcnn import MTCNN
     detector = MTCNN()
 
     test_dataset = FDDataset(mode='realtime', modality=config.image_mode,image_size=config.image_size,
                              fold_index=config.train_fold_index, augment=augment, dataset_path=None,
                              stream_device=config.stream, detect_function=detector.detect_faces)
 
-    # test_loader = DataLoader(test_dataset,
-    #                          shuffle=False,
-    #                          batch_size=36,
-    #                          drop_last=False,
-    #                          num_workers=1)
-
-    ins = []
-
     net.eval()
 
-    out = infer_test_infinite(net, test_dataset)
-
-    np.set_printoptions(precision=2, suppress=True)
-    preds = np.array(out).tolist()
-
-    summary = []
-
-    for (filename, label), out in zip(ins, preds):
-        # print(filename, label, out, sep="\t")
-        summary.append([filename, label, out])
-
-    summary = sorted(summary, key=lambda f: f[2], reverse=True)
-    for f, l, o in summary:
-        print(f, l, o)
-
-    # print(np.array(out) * 100)
+    infer_test_infinite(net, test_dataset)
     print('done')
