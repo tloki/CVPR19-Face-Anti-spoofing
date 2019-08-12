@@ -1,6 +1,6 @@
 # Code for ChaLearn Face Anti-spoofing Attack Detection Challenge @ CVPR2019 by SeuTao
 This is the source code for my solution to the [ChaLearn Face Anti-spoofing Attack Detection Challenge](https://competitions.codalab.org/competitions/20853#learn_the_details) hosted by ChaLearn. 
-![image](https://github.com/SeuTao/CVPR19-Face-Anti-spoofing/blob/master/PNG/v1_fusion.png)
+![image](https://github.com/tloki/CVPR19-Face-Anti-spoofing/blob/master/images/fusion.png)
 ## Recent Update
 
 **`2019.3.29`**: Final code is not ready, will update soon.
@@ -12,8 +12,8 @@ This is the source code for my solution to the [ChaLearn Face Anti-spoofing Atta
 - scikit-image==0.14.0
 - scikit-learn==0.19.2
 - tqdm==4.23.4
-- torch==0.4.1
-- torchvision==0.2.1
+- torch==1.2.0
+- torchvision
 - mtcnn
 
 #### Train single-modal Model
