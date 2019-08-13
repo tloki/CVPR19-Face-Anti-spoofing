@@ -3,6 +3,22 @@ md5sums of fitted models:
 bff948c35c6b18d9a492edb84acf4c78  model16.pth
 ed04da96f48ce52be9f58669d31d936b  model32.pth*
 3a324165e73735a0f71e1783c766d704  model48.pth
+* not valid since not transferred correctly (missing weight info)
+
+single model requires 619-623MB for single face detection
+
+all three models require about:
+763MB
+
+all three models + mtcnn @ gpu requires:
+1857MB
+
+forward pass time (@MX150):
+
+mean: 128ms (7.8 FPS)
+max : 153ms (6.5 FPS)
+min : 120ms (8.3 FPS)
 
 
-* izgleda da nije prebacen do kraja
+resolution:
+1280x720

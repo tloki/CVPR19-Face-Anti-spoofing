@@ -67,10 +67,12 @@ class FaceBagNet:
 
         return is_real
 
+from time import time
 
 if __name__ == "__main__":
 
     model48 = FaceBagNet("model48.pth", 48, "cuda")
+    model32 = FaceBagNet("model48.pth", 32, "cuda") # TODO: this one is just dummy
     # model32 = FaceBagNet("model32.pth", 32, "cuda")
     model16 = FaceBagNet("model16.pth", 16, "cuda")
 
@@ -97,8 +99,13 @@ if __name__ == "__main__":
                 if i == 0:
                     crop_img = frame[bbox[1]:bbox[1] + bbox[3], bbox[0]:bbox[0] + bbox[2]]
                     cv2.imshow("detected face", crop_img)
-                    print("model48: {} model16: {}".format(model48.predict(crop_img),
-                                                           model16.predict(crop_img)))
+
+                    time_ = time()
+                    print("model16: {} model32: {} model48: {}".format(model16.predict(crop_img),
+                                                                       model32.predict(crop_img),
+                                                                       model48.predict(crop_img)))
+                    duration = time() - time_
+                    print(duration)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
