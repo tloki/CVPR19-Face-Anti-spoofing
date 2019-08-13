@@ -67,7 +67,7 @@ def tpr_fpr(dist, actual_issame, fpr_target = 0.001):
         fpr[threshold_idx] = FPR
 
     if np.max(fpr) >= fpr_target:
-        f = interpolate.interp1d(np.asarray(fpr), thresholds, kind= 'slinear')
+        f = interpolate.interp1d(np.asarray(fpr), thresholds, kind='slinear')
         threshold = f(fpr_target)
     else:
         threshold = 0.0
@@ -238,7 +238,7 @@ def infer_test(net: nn.Module, test_loader, device="cpu"):
     return out_probs[:, 1]
 
 
-def infer_test_simple( net, test_loader):
+def infer_test_simple(net, test_loader):
     valid_num = 0
     probs = []
 
@@ -248,7 +248,7 @@ def infer_test_simple( net, test_loader):
         inpt = inpt.cuda() if torch.cuda.is_available() else inpt.cpu()
 
         with torch.no_grad():
-            logit, _ , _ = net(inpt)
+            logit, _, _ = net(inpt)
             logit = logit.view(b, n, 2)
             logit = torch.mean(logit, dim=1, keepdim=False)
             prob = F.softmax(logit, 1)
@@ -261,38 +261,53 @@ def infer_test_simple( net, test_loader):
     return probs
 
 
-def infer_test_infinite(net, test_loader):
-    import cv2
-    valid_num = 0
-    probs = []
-
-    while True:
-        try:
-            inpt, truth = test_loader[0]
-        except:
-            continue
-
-        inp = inpt.size()
-        b, n, c, w, h = inp
-        inpt = inpt.view(b*n, c, w, h)
-        inpt = inpt.cuda() if torch.cuda.is_available() else inpt.cpu()
-
-        with torch.no_grad():
-            logit, _, _ = net(inpt)
-            logit = logit.view(b, n, 2)
-            logit = torch.mean(logit, dim=1, keepdim=False)
-            prob = F.softmax(logit, 1)
-
-        is_real = list(prob.data.cpu().numpy()[:, 1])[0]
-        print((is_real > 0.5)*"ok" + (is_real < 0.5)*"FAKE", is_real)
-
-        valid_num += len(input)
-        probs.append(prob.data.cpu().numpy())
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    probs = np.concatenate(probs)
-    probs = probs[:, 1]
-
-    return probs
+# def infer_test_realtime(net, test_loader):
+#     from FBN import FaceBagNet
+#     model48 = FaceBagNet("model48.pth", 48, "cuda")
+#
+#     # print(model48.neural_net)
+#
+#     # for param in net.parameters():
+#     #     print(param.data)
+#     #     exit(-1)
+#
+#     import cv2
+#     valid_num = 0
+#     probs = []
+#
+#     cv2.namedWindow("detected")
+#     print("started realtime detection loop:")
+#
+#     while True:
+#         # try:
+#         inpt, raw_image = test_loader[0]
+#         # except:
+#         #     print(".")
+#         #     continue
+#
+#         inp = inpt.size()
+#         b, n, c, w, h = inp
+#         print(b, n, c, w, h)
+#         inpt = inpt.view(b*n, c, w, h)
+#         inpt = inpt.cuda() if torch.cuda.is_available() else inpt.cpu()
+#
+#         with torch.no_grad():
+#             logit, _, _ = net(inpt)
+#             logit = logit.view(b, n, 2)
+#             logit = torch.mean(logit, dim=1, keepdim=False)
+#             prob = F.softmax(logit, 1)
+#
+#         is_real = list(prob.data.cpu().numpy()[:, 1])[0]
+#
+#         print((is_real > 0.5)*"ok" + (is_real < 0.5)*"FAKE", is_real, model48.predict(raw_image))
+#
+#         valid_num += len(inpt)
+#         probs.append(prob.data.cpu().numpy())
+#
+#         if cv2.waitKey(1) & 0xFF == ord('q'):
+#             break
+#
+#     probs = np.concatenate(probs)
+#     probs = probs[:, 1]
+#
+#     return probs

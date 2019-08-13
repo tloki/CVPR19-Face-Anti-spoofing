@@ -1,14 +1,17 @@
 from imgaug import augmenters as iaa
 import math
+import numpy as np
 import cv2
-from preprocessing.data_helper import * # random
+# from preprocessing.data_helper import RESIZE_SIZE
+from preprocessing.data_helper import *  # random
+RESIZE_SIZE = 112
 
 
 def random_cropping(image, target_shape=(48, 48, 3), is_random=True):
     # randomly crop part of photo. -
 
     # resize back to 112x112 and then crop random part to target shape
-    image = cv2.resize(image,(RESIZE_SIZE,RESIZE_SIZE))
+    image = cv2.resize(image, (RESIZE_SIZE, RESIZE_SIZE))
     target_h, target_w,_ = target_shape
     height, width, _ = image.shape
 

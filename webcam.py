@@ -3,8 +3,6 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-import cv2
-import os
 import numpy as np
 from mtcnn.mtcnn import MTCNN
 from copy import deepcopy
@@ -21,11 +19,11 @@ RESIZE_SIZE = 112 # from data _helper import RESIZE_SIZE
 
 
 font = cv2.FONT_HERSHEY_SIMPLEX
-TopLeftCornerOfPicture = (10, 40) # (left, up is origin)
+TopLeftCornerOfPicture = (10, 40)  # (left, up is origin)
 fontScale = 1
-fontColor = (0,0,255)
+fontColor = (0, 0, 255)
 lineType = 2
-fontColor2 = (0,255,0)
+fontColor2 = (0, 255, 0)
 
 # TODO: add mtcnn resolution modifier
 # TODO: play with MTCNN parameters
@@ -103,25 +101,25 @@ def main():
                         except:
                             continue
 
-                        infer_img = color_augumentor(infer_img, target_shape=(48, 48, 3), is_infer=True)
-                        n = len(infer_img)
+                        # infer_img = color_augumentor(infer_img, target_shape=(48, 48, 3), is_infer=True)
+                        # n = len(infer_img)
 
-                        infer_img = np.concatenate(infer_img, axis=0)
-                        infer_img = np.transpose(infer_img, (0, 3, 1, 2))
-                        infer_img = infer_img.astype(np.float32)
-                        infer_img = infer_img.reshape([n, 3, 48, 48])
-                        infer_img = infer_img / 255.0
+                        # infer_img = np.concatenate(infer_img, axis=0)
+                        # infer_img = np.transpose(infer_img, (0, 3, 1, 2))
+                        # infer_img = infer_img.astype(np.float32)
+                        # infer_img = infer_img.reshape([n, 3, 48, 48])
+                        # infer_img = infer_img / 255.0
 
-                        inpt = torch.FloatTensor([infer_img])
+                        # inpt = torch.FloatTensor([infer_img])
                         # inpt = torch.FloatTensor()
-                        data = [[inpt, inpt]]
+                        # data = [[inpt, inpt]]
 
-                        result = infer_test_simple(net, data)
+                        # result = infer_test_simple(net, data)
                         # result = result[0]
                         # result = round(result)
                         # result = bool(result)
                         # result = "OK"*(result) + "FAKE"*(not result)
-                        print(result)
+                        # print(result)
 
                         cv2.imshow("id: "+ str(i), infer_img)
 

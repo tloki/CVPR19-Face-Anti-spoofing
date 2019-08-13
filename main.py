@@ -29,7 +29,7 @@ def main(cfg):
 
     elif cfg.mode == 'realtime':
         cfg.pretrained_model = r'global_min_acer_model.pth'
-        run_realtime(cfg, dir='global_test_36_TTA')
+        run_realtime(cfg)
 
     return
 

@@ -21,15 +21,15 @@ class Net(nn.Module):
         self.load_state_dict(state_dict)
         print('load: '+pretrain_file)
 
-    def __init__(self, num_class=2, id_class = 300, is_first_bn = False):
-        super(Net,self).__init__()
+    def __init__(self, num_class=2, id_class=300, is_first_bn=False):
+        super(Net, self).__init__()
 
         self.is_first_bn = is_first_bn
         if self.is_first_bn:
             self.first_bn = nn.BatchNorm2d(3)
             # self.first_bn == nn.BatchNorm2d()
 
-        self.encoder  = FaceBagNet_model_A(num_classes=1000)
+        self.encoder = FaceBagNet_model_A(num_classes=1000)
         self.conv1 = self.encoder.layer0
         self.conv2 = self.encoder.layer1
         self.conv3 = self.encoder.layer2
@@ -40,7 +40,7 @@ class Net(nn.Module):
         self.id_fc = nn.Sequential(nn.Linear(2048, id_class))
 
     def forward(self, x):
-        batch_size, C, H, W = x.shape
+        batch_size, channels, height, width = x.shape
 
         # if self.is_first_bn and False:
         if self.is_first_bn:
@@ -50,16 +50,17 @@ class Net(nn.Module):
             std = [0.229, 0.224, 0.225]
 
             x = torch.cat([
-                (x[:,[0]]-mean[0])/std[0],
-                (x[:,[1]]-mean[1])/std[1],
-                (x[:,[2]]-mean[2])/std[2],
-            ],1)
+                (x[:, [0]] - mean[0]) / std[0],
+                (x[:, [1]] - mean[1]) / std[1],
+                (x[:, [2]] - mean[2]) / std[2],
+            ], 1)
+            raise NotImplementedError("not yet implemented non-batch-normalized functionality")
 
-        x = self.conv1(x) #; print('e1',x.size())
-        x = self.conv2(x) #; print('e2',x.size())
-        x = self.conv3(x) #; print('e3',x.size())
-        x = self.conv4(x) #; print('e4',x.size())
-        x = self.conv5(x) #; print('e5',x.size())
+        x = self.conv1(x)  # ; print('e1', x.size())
+        x = self.conv2(x)  # ; print('e2', x.size())
+        x = self.conv3(x)  # ; print('e3', x.size())
+        x = self.conv4(x)  # ; print('e4', x.size())
+        x = self.conv5(x)  # ; print('e5', x.size())
 
         fea = F.adaptive_avg_pool2d(x, output_size=1).view(batch_size,-1)
         fea = F.dropout(fea, p=0.50, training=self.training)

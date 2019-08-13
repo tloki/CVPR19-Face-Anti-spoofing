@@ -1,0 +1,8 @@
+md5sums of fitted models:
+
+bff948c35c6b18d9a492edb84acf4c78  model16.pth
+ed04da96f48ce52be9f58669d31d936b  model32.pth*
+3a324165e73735a0f71e1783c766d704  model48.pth
+
+
+* izgleda da nije prebacen do kraja

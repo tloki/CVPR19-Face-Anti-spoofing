@@ -1,5 +1,3 @@
-from utils import *
-import cv2
 from preprocessing.data_helper import *
 from torch.utils.data import Dataset
 
@@ -40,7 +38,7 @@ class FDDataset(Dataset):
         self.test_image_path = TST_IMGS_DIR
 
         self.image_size = image_size
-        self.fold_index = fold_index # ovo doslovno nicemu ne sluzi
+        self.fold_index = fold_index  # ovo doslovno nicemu ne sluzi
 
         self.capture = None
         self.set_mode(self.mode,self.fold_index)
@@ -83,6 +81,7 @@ class FDDataset(Dataset):
                 self.train_list = transform_balance(self.train_list)
             print('set dataset mode: train')
 
+        # video file or webcam
         elif self.mode == 'realtime':
             print('set realtime camera/video capture')
 
@@ -100,38 +99,52 @@ class FDDataset(Dataset):
         print()
 
     def livestream(self):
+        # print("started live detection loop:")
         detected = False
         crop_img = None
-
+        # cv2.namedWindow("detected")
         while not detected:
             # video stream util face is detected
             ret, frame = self.capture.read()
 
+            # cv2.imshow("detected", frame)
+            # return frame
             if not ret:
                 raise RuntimeError("invalid frame return value")
 
             detection = self.detect_function(frame)
+            # cv2.imshow("detected", frame)
+            # print("n")
 
             if not detection:
                 detected = False
-                print("not detected")
+                # print(".", end="")
+                sys.stdout.flush()
             else:
+                # print()
                 detected = True
-                print("detected")
+                # print("detected")
 
                 for i, bbox in enumerate(detection):
                     bbox = bbox['box']
                     pt1 = bbox[0], bbox[1]
                     pt2 = bbox[0] + bbox[2], bbox[1] + int(bbox[3])
 
-                    cv2.rectangle(frame, pt1, pt2, color=(0, 255, 0), thickness=2)
-                    cv2.putText(frame, "id: "+ str(i), (bbox[0], bbox[1] - 5), cv2.FONT_HERSHEY_SIMPLEX,
-                                fontScale=1, color=(0, 0, 255), thickness=2)
+                    # frame = np.zeros_like(frame)
+                    # cv2.rectangle(frame, pt1, pt2, color=(0, 255, 0), thickness=2)
+                    # cv2.putText(frame, "id: "+ str(i), (bbox[0], bbox[1] - 5), cv2.FONT_HERSHEY_SIMPLEX,
+                    #             fontScale=1, color=(0, 0, 255), thickness=2)
 
                     # TODO: do not hardcode face index
                     if i == 0:
                         crop_img = frame[bbox[1]:bbox[1]+bbox[3], bbox[0]:bbox[0]+bbox[2]]
-                        cv2.imshow("id: "+ str(i), crop_img)
+                        # print(crop_img)
+
+                        try:
+                            cv2.imshow("detected", crop_img)
+                        except:
+                            detected = False
+                            continue
         return crop_img
 
     # get i-th item, except if balance param is set - in that case return random sample, ignoring the given index
@@ -167,9 +180,11 @@ class FDDataset(Dataset):
         elif self.mode == 'test':
             color, depth, ir = self.test_list[index][0:3]
             test_id = color + ' ' + depth + ' ' + ir
+
         elif self.mode == 'realtime':
             self.modality = None
             image = self.livestream()
+
         else:
             raise ValueError("mode expected to be in (train, test, val, realtime), but got '{}' instead".format(
                 self.mode))
@@ -190,8 +205,11 @@ class FDDataset(Dataset):
                 raise RuntimeError("unable to open image {}".format(img_path))
 
         if self.mode == 'realtime':
-            cv2.imshow("realtime spoof detection", image)
-            print("size: ", image.shape, end="\t")
+
+            from copy import deepcopy
+            raw_img = deepcopy(image)
+
+            print("size: {}\t".format(image.shape).expandtabs(10), end="")
             image = self.augment(image, target_shape=(self.image_size, self.image_size, 3), is_infer=True)
             n = len(image)
             image = np.concatenate(image, axis=0)
@@ -203,11 +221,11 @@ class FDDataset(Dataset):
 
             inpt = torch.FloatTensor(image)
 
-            return inpt, None
+            return inpt, deepcopy(raw_img)
 
         elif self.mode == 'train':
             # self.augment (for color) == color_augumentor, ir = ir_augumentor, dpth = depth_augumentor
-            # randomly flip hoirzontally, flip vertically, blur, rotate, crop part of photo, backout part of photo
+            # randomly flip horizontally, flip vertically, blur, rotate, crop part of photo, blackout part of photo
             image = self.augment(image, target_shape=(self.image_size, self.image_size, 3))
 
             # resize to dest
@@ -217,7 +235,7 @@ class FDDataset(Dataset):
             image = np.transpose(image, (2, 0, 1))
             image = image.astype(np.float32)
             image = image.reshape([self.channels, self.image_size, self.image_size])
-            image = image / 255.0 # convert to float 0-1
+            image = image / 255.0  # convert to float 0-1
             label = int(label)
 
             # return tensor of 3 channel image, and 1x1 tensor with label (integer)
@@ -227,7 +245,7 @@ class FDDataset(Dataset):
 
         elif self.mode == 'val':
             # make 36 patches from image
-            image = self.augment(image, target_shape=(self.image_size, self.image_size, 3), is_infer = True)
+            image = self.augment(image, target_shape=(self.image_size, self.image_size, 3), is_infer=True)
 
             n = len(image)
 
